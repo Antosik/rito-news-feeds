@@ -1,0 +1,37 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  rito-news-feeds
+  
+  Generates an Atom, RSS and JSON feed based on github.com/Antosik/rito-news data
+
+# More info about Globals: https://github.com/awslabs/serverless-application-model/blob/master/docs/globals.rst
+Globals:
+  Function:
+    MemorySize: 512
+    Timeout: 300
+    Tracing: Active
+    Environment:
+      Variables:
+        BUCKET_NAME: !Ref BucketName
+
+Parameters:
+  BucketName:
+    Type: String
+    Description: A S3 bucket name, eg. my-bucket-name
+
+Resources:
+  LeagueOfLegendsStatusChecker:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties:
+      CodeUri: ../lol/status/
+      Handler: status
+      Runtime: go1.x
+      Architectures:
+        - x86_64
+      Events:
+        Schedule:
+          Type: Schedule
+          Properties:
+            Schedule: 'rate(30 minute)'
+      

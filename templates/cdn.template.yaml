@@ -1,0 +1,93 @@
+---
+AWSTemplateFormatVersion: 2010-09-09
+Description: rito-news-feeds - CloudFormation stack for CDN deployment
+
+Parameters:
+
+  BucketName:
+    Type: String
+    Description: A S3 bucket name, eg. my-bucket-name
+
+  DomainName:
+    Type: String
+    Description: A domain name, eg. example.com.
+
+Resources:
+
+  s3WebSiteBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Ref BucketName
+      Tags:
+        - Key: Product
+          Value: rito-news
+        - Key: Name
+          Value: !Ref BucketName
+
+  s3WebSiteBucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref s3WebSiteBucket
+      PolicyDocument:
+        Id: !Sub "${s3WebSiteBucket}BucketPolicy"
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Principal:
+              AWS: !Sub "arn:aws:iam::cloudfront:user/CloudFront Origin Access Identity ${cfOriginIdentity}"
+            Action: "s3:GetObject"
+            Resource: !Sub "arn:aws:s3:::${s3WebSiteBucket}/*"
+
+  acmWebSiteCertificateSSL:
+    Type: AWS::CertificateManager::Certificate
+    Properties:
+      DomainName: !Ref DomainName
+      ValidationMethod: DNS
+      Tags:
+        - Key: Product
+          Value: rito-news
+        - Key: Name
+          Value: !Ref DomainName
+
+  cfOriginIdentity:
+    Type: AWS::CloudFront::CloudFrontOriginAccessIdentity
+    Properties:
+      CloudFrontOriginAccessIdentityConfig:
+        Comment: !Sub "CloudFront Origin access identity for ${DomainName}"
+
+  cfDistribution:
+    Type: AWS::CloudFront::Distribution
+    Properties:
+      DistributionConfig:
+        Aliases:
+          - !Ref DomainName
+        DefaultCacheBehavior:
+          AllowedMethods:
+            - GET
+            - HEAD
+          CachedMethods:
+            - GET
+            - HEAD
+          ForwardedValues:
+            QueryString: True
+          TargetOriginId: !Sub "S3-origin-${s3WebSiteBucket}"
+          ViewerProtocolPolicy: redirect-to-https
+        DefaultRootObject: index.html
+        Enabled: true
+        HttpVersion: http2
+        IPV6Enabled: True
+        Origins:
+          - DomainName: !GetAtt s3WebSiteBucket.RegionalDomainName
+            Id: !Sub "S3-origin-${s3WebSiteBucket}"
+            S3OriginConfig:
+              OriginAccessIdentity: !Sub "origin-access-identity/cloudfront/${cfOriginIdentity}"
+        PriceClass: PriceClass_All
+        ViewerCertificate:
+          AcmCertificateArn: !Ref acmWebSiteCertificateSSL
+          MinimumProtocolVersion: TLSv1.2_2018
+          SslSupportMethod: sni-only
+      Tags:
+        - Key: Product
+          Value: rito-news
+        - Key: Name
+          Value: !Ref DomainName

@@ -1,0 +1,62 @@
+[
+    {
+        "id": "br1",
+        "region":"br",
+        "locales": ["pt_BR"]
+    },
+    {
+        "id": "eun1",
+        "region": "eune",
+        "locales": ["en_GB", "cs_CZ", "el_GR", "hu_HU", "pl_PL", "ro_RO"]
+    },
+    {
+        "id": "euw1",
+        "region": "euw",
+        "locales": ["en_GB", "de_DE", "es_ES", "fr_FR", "it_IT"]
+    },
+    {
+        "id": "jp1",
+        "region": "jp",
+        "locales": ["ja_JP"]
+    },
+    {
+        "id": "kr1",
+        "region": "kr",
+        "locales": ["ko_KR"]
+    },
+    {
+        "id": "la1",
+        "region": "lan",
+        "locales": ["es_MX"]
+    },
+    {
+        "id": "la2",
+        "region": "las",
+        "locales": ["es_AR"]
+    },
+    {
+        "id": "na1",
+        "region": "na",
+        "locales": ["en_US"]
+    },
+    {
+        "id": "oc1",
+        "region": "oce",
+        "locales": ["en_AU"]
+    },
+    {
+        "id": "pbe",
+        "region": "pbe",
+        "locales": ["en_US", "cs_CZ", "de_DE", "el_GR", "es_MX", "es_ES", "fr_FR", "hu_HU", "it_IT", "ja_JP", "ko_KR", "pl_PL", "pt_BR", "ro_RO", "ru_RU", "tr_TR"]
+    },
+    {
+        "id": "ru1",
+        "region": "ru",
+        "locales": ["ru_RU"]
+    },
+    {
+        "id": "tr1",
+        "region": "tr",
+        "locales": ["tr_TR"]
+    }
+  ]
