@@ -25,3 +25,15 @@ func SplitSliceToChunks[T interface{}](arr []T, count int) [][]T {
 
 	return result
 }
+
+func IsEqual[T comparable](a, b []T, comparator func(a, b T) bool) bool {
+	if len(a) != len(b) {
+		return false
+	}
+	for i := range a {
+		if !comparator(a[i], b[i]) {
+			return false
+		}
+	}
+	return true
+}

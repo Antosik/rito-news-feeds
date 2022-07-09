@@ -30,7 +30,8 @@ func init() {
 }
 
 func process(
-	channel chan internal.ErrorCollector,
+	filesChannel chan int,
+	errorsChannel chan internal.ErrorCollector,
 	parameters []statusParameters,
 	locales map[string]statusLocale,
 	uploader *internal.S3FeedUploader,
@@ -47,13 +48,25 @@ func process(
 		)
 
 		for _, locale := range param.Locales {
+			fpath := filepath.Join(dpath, fmt.Sprintf("status.%s", locale))
+
+			// Get new items
 			entries, err := client.GetItems(locale)
 			if err != nil {
 				errorsCollector.Collect(fmt.Errorf("can't get items for %s-%s: %w", param.Id, locale, err))
 				continue
 			}
 
-			fpath := filepath.Join(dpath, fmt.Sprintf("status.%s", locale))
+			// Check diff with existing data
+			existingEntries, err := internal.GetExistingRawEntries[lol.StatusEntry](domain, fpath)
+			if err != nil {
+				errorsCollector.Collect(err)
+			} else if internal.IsEqual(existingEntries, entries, compareLolStatusEntry) {
+				fmt.Printf("%s-%s doesn't require update\n", param.Id, locale)
+				continue
+			}
+
+			fmt.Printf("updating %s-%s...\n", param.Id, locale)
 
 			localeData, ok := locales[locale]
 			if !ok {
@@ -82,12 +95,16 @@ func process(
 		}
 	}
 
-	uploaderErrors := uploader.UploadFiles(generatedFiles)
-	if len(uploaderErrors) > 0 {
-		errorsCollector.CollectMany(uploaderErrors)
+	// Upload files to S3
+	if len(generatedFiles) > 0 {
+		uploaderErrors := uploader.UploadFiles(generatedFiles)
+		if len(uploaderErrors) > 0 {
+			errorsCollector.CollectMany(uploaderErrors)
+		}
 	}
 
-	channel <- *errorsCollector
+	errorsChannel <- *errorsCollector
+	filesChannel <- len(generatedFiles)
 }
 
 func handler() error {
@@ -97,32 +114,44 @@ func handler() error {
 	if len(locales) == 0 {
 		return fmt.Errorf("no locales found: %w", localesErr)
 	}
+	if domain == "" {
+		return fmt.Errorf("unable to load domain name")
+	}
 
 	var (
-		channel         = make(chan internal.ErrorCollector)
-		channelsCount   = 5
-		errorsCollector = internal.NewErrorCollector()
-		uploader        = internal.NewS3Uploader()
-		invalidator     = internal.NewCloudFrontInvalidator()
+		errorsChannel       = make(chan internal.ErrorCollector)
+		filesChannel        = make(chan int)
+		channelsCount       = 5
+		generatedFilesCount = 0
+		errorsCollector     = internal.NewErrorCollector()
+		uploader            = internal.NewS3Uploader()
+		invalidator         = internal.NewCloudFrontInvalidator()
 	)
 
 	for _, chunk := range internal.SplitSliceToChunks(parameters, channelsCount) {
-		go process(channel, chunk, locales, uploader)
+		go process(filesChannel, errorsChannel, chunk, locales, uploader)
 	}
 
 	for i := 0; i < channelsCount; i++ {
-		errorsCollector.CollectFrom(<-channel)
+		errorsCollector.CollectFrom(<-errorsChannel)
+		generatedFilesCount = generatedFilesCount + <-filesChannel
 	}
 
-	invalidationErr := invalidator.Invalidate(
-		fmt.Sprintf("lolstatus-%v", time.Now().UTC().Unix()),
-		[]string{"/lol/*/status*"},
-	)
-	if invalidationErr != nil {
-		errorsCollector.Collect(invalidationErr)
+	fmt.Printf("Generated files count: %d\n", generatedFilesCount)
+
+	// Invalidate CloudFront if new files were generated
+	if generatedFilesCount > 0 {
+		invalidationErr := invalidator.Invalidate(
+			fmt.Sprintf("lolstatus-%v", time.Now().UTC().Unix()),
+			[]string{"/lol/*/status*"},
+		)
+		if invalidationErr != nil {
+			errorsCollector.Collect(invalidationErr)
+		}
 	}
 
 	if errorsCollector.Size() > 0 {
+		fmt.Printf("%d errors occured\n", errorsCollector.Size())
 		fmt.Printf(errorsCollector.Error())
 	}
 

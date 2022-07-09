@@ -86,3 +86,7 @@ func getStatusLocales() (map[string]statusLocale, error) {
 
 	return localeMap, nil
 }
+
+func compareLolStatusEntry(a lol.StatusEntry, b lol.StatusEntry) bool {
+	return a.UID == b.UID
+}
