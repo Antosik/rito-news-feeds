@@ -22,6 +22,10 @@ var (
 	domain string
 )
 
+const (
+	channelsCount = 5
+)
+
 func init() {
 	parameters, parametersErr = getStatusParameters()
 	locales, localesErr = getStatusLocales()
@@ -124,7 +128,6 @@ func handler() error {
 	var (
 		errorsChannel       = make(chan internal.ErrorCollector)
 		filesChannel        = make(chan int)
-		channelsCount       = 5
 		generatedFilesCount = 0
 		errorsCollector     = internal.NewErrorCollector()
 		uploader            = internal.NewS3Uploader()

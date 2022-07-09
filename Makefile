@@ -15,6 +15,19 @@ local:
 			ParameterKey=BucketName,ParameterValue=${BUCKET_NAME} \
 			ParameterKey=DistributionId,ParameterValue=${DISTRIBUTION_ID}
 
+validate:
+	sam validate \
+		--template ./templates/sam.template.yaml
+
+deploy:
+	sam deploy \
+		--stack-name rito-news-feeds \
+		--template ./templates/sam.template.yaml \
+		--parameter-overrides \
+			ParameterKey=DomainName,ParameterValue=${DOMAIN_NAME} \
+			ParameterKey=BucketName,ParameterValue=${BUCKET_NAME} \
+			ParameterKey=DistributionId,ParameterValue=${DISTRIBUTION_ID}
+
 cdn-create:
 	aws cloudformation create-stack \
 		--stack-name rito-news-cdn-stack \

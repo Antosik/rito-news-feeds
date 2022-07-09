@@ -16,6 +16,7 @@ Globals:
         BUCKET_NAME: !Ref BucketName
         DOMAIN_NAME: !Ref DomainName
         DISTRIBUTION_ID: !Ref DistributionId
+        TTL: !Ref TTL
 
 Parameters:
   BucketName:
@@ -31,6 +32,10 @@ Parameters:
     Type: String
     Default: dev
     Description: Stage name aka dev/prod
+  TTL:
+    Type: Number
+    Default: 15
+    Description: Time-to-live for RSS feeds
 
 Resources:
   LeagueOfLegendsStatusChecker:
@@ -48,5 +53,6 @@ Resources:
         Schedule:
           Type: Schedule
           Properties:
-            Schedule: 'rate(30 minute)'
-      
+            Schedule: !Sub
+              - 'rate(${TTL} minutes)'
+              - TTL: !Ref TTL
