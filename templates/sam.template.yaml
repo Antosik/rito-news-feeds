@@ -14,16 +14,31 @@ Globals:
     Environment:
       Variables:
         BUCKET_NAME: !Ref BucketName
+        DOMAIN_NAME: !Ref DomainName
+        DISTRIBUTION_ID: !Ref DistributionId
 
 Parameters:
   BucketName:
     Type: String
     Description: A S3 bucket name, eg. my-bucket-name
+  DomainName:
+    Type: String
+    Description: A domain name, eg. example.com.
+  DistributionId:
+    Type: String
+    Description: CloudFormation distribution id
+  Stage:
+    Type: String
+    Default: dev
+    Description: Stage name aka dev/prod
 
 Resources:
   LeagueOfLegendsStatusChecker:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
     Properties:
+      FunctionName: !Sub
+        - 'rito-news-lol-status-${Stage}'
+        - Stage: !Ref Stage
       CodeUri: ../lol/status/
       Handler: status
       Runtime: go1.x

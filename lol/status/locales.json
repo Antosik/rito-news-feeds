@@ -1,78 +1,78 @@
 [
     {
-        "locale": "cs-CZ",
+        "locale": "cs_CZ",
         "title": "League of Legends - Stav služeb"
     },
     {
-        "locale": "de-DE",
-        "title": "League of Legends - Service-Status"
+        "locale": "de_DE",
+        "title": "League of Legends - Service_Status"
     },
     {
-        "locale": "el-GR",
+        "locale": "el_GR",
         "title": "Κατάσταση υπηρεσίας - League of Legends"
     },
     {
-        "locale": "en-AU",
+        "locale": "en_AU",
         "title": "League of Legends - Service Status"
     },
     {
-        "locale": "en-GB",
+        "locale": "en_GB",
         "title": "League of Legends - Service Status"
     },
     {
-        "locale": "en-US",
+        "locale": "en_US",
         "title": "League of Legends - Service Status"
     },
     {
-        "locale": "es-AR",
+        "locale": "es_AR",
         "title": "Estado del servicio de - League of Legends"
     },
     {
-        "locale": "es-ES",
+        "locale": "es_ES",
         "title": "Estado del servicio de - League of Legends"
     },
     {
-        "locale": "es-MX",
+        "locale": "es_MX",
         "title": "Estado del servicio de - League of Legends"
     },
     {
-        "locale": "fr-FR",
+        "locale": "fr_FR",
         "title": "League of Legends - État du service"
     },
     {
-        "locale": "hu-HU",
+        "locale": "hu_HU",
         "title": "League of Legends - Szolgáltatás állapota"
     },
     {
-        "locale": "it-IT",
+        "locale": "it_IT",
         "title": "League of Legends - Stato del servizio"
     },
     {
-        "locale": "ja-JP",
+        "locale": "ja_JP",
         "title": "リーグ・オブ・レジェンド - サービス状況"
     },
     {
-        "locale": "ko-KR",
+        "locale": "ko_KR",
         "title": "리그 오브 레전드 - 서비스 상태"
     },
     {
-        "locale": "pl-PL",
+        "locale": "pl_PL",
         "title": "Status usługi - League of Legends"
     },
     {
-        "locale": "pt-BR",
+        "locale": "pt_BR",
         "title": "League of Legends - Status de serviço"
     },
     {
-        "locale": "ro-RO",
+        "locale": "ro_RO",
         "title": "Starea serverelor - League of Legends"
     },
     {
-        "locale": "ru-RU",
+        "locale": "ru_RU",
         "title": "League of Legends - Статус сервера"
     },
     {
-        "locale": "tr-TR",
+        "locale": "tr_TR",
         "title": "League of Legends - Hizmet Durumu"
     }
 ]

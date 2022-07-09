@@ -22,7 +22,7 @@ var feedBufferGenerators = map[string]func(feed Feed) ([]byte, error){
 	"jsonfeed": func(feed Feed) ([]byte, error) { return feed.JSONFeed().JSON() },
 }
 
-func GenerateFeedFiles(feed Feed, name string) ([]FeedFile, []error) {
+func GenerateFeedFiles(feed Feed, domain string, name string) ([]FeedFile, []error) {
 	var (
 		generatedFiles   = make([]FeedFile, 0, 4)
 		generationErrors = make([]error, 0, 4)
@@ -31,12 +31,16 @@ func GenerateFeedFiles(feed Feed, name string) ([]FeedFile, []error) {
 
 	for _, format := range formats {
 		mime := feedMimeType[format]
+		filename := fmt.Sprintf("%s.%s", name, format)
+
+		if domain != "" {
+			feed.Links.Self = fmt.Sprintf("https://%s/%s", domain, filename)
+		}
 
 		data, err := feedBufferGenerators[format](feed)
 		if err != nil {
 			generationErrors = append(generationErrors, err)
 		} else {
-			filename := fmt.Sprintf("%s.%s", name, format)
 			generatedFiles = append(generatedFiles, FeedFile{
 				Name:     filename,
 				MimeType: mime,
@@ -46,4 +50,17 @@ func GenerateFeedFiles(feed Feed, name string) ([]FeedFile, []error) {
 	}
 
 	return generatedFiles, generationErrors
+}
+
+func GenerateRawFile(entries interface{}, name string) (FeedFile, error) {
+	rawjson, err := MarshalJSON(entries)
+	if err != nil {
+		return FeedFile{}, err
+	} else {
+		return FeedFile{
+			Name:     name,
+			MimeType: "application/json",
+			Buffer:   rawjson,
+		}, nil
+	}
 }

@@ -9,7 +9,7 @@ import (
 type JSONFeed struct {
 	Version     string          `json:"version"`
 	Title       string          `json:"title"`
-	Description string          `json:"description"`
+	Description string          `json:"description,omitempty"`
 	HomePageUrl string          `json:"home_page_url"`
 	FeedUrl     string          `json:"feed_url"`
 	Language    string          `json:"language"`

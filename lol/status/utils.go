@@ -40,7 +40,7 @@ func lolStatusEntryToFeedEntry(entry lol.StatusEntry) internal.FeedEntry {
 	}
 }
 
-func createLolStatusFeed(locale string, entries []lol.StatusEntry) internal.Feed {
+func createLolStatusFeed(regionId string, locale *statusLocale, entries []lol.StatusEntry) internal.Feed {
 	feedEntries := make([]internal.FeedEntry, len(entries))
 	for i, entry := range entries {
 		feedEntries[i] = lolStatusEntryToFeedEntry(entry)
@@ -51,13 +51,14 @@ func createLolStatusFeed(locale string, entries []lol.StatusEntry) internal.Feed
 		ttl = 15
 	}
 
+	links := internal.FeedLinks{
+		Alternate: fmt.Sprintf("https://status.riotgames.com/lol?region=%s&locale=%s", regionId, locale.Locale),
+	}
+
 	return internal.Feed{
-		Title: "League of Legends Status",
-		Links: internal.FeedLinks{
-			Self:      "https://www.leagueoflegends.com/",
-			Alternate: "https://www.leagueoflegends.com/",
-		},
-		Language: strings.ReplaceAll(locale, "_", "-"),
+		Title:    locale.Title,
+		Links:    links,
+		Language: strings.ReplaceAll(locale.Locale, "_", "-"),
 		TTL:      uint8(ttl),
 		Items:    feedEntries,
 	}

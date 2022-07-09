@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"os"
 	"path/filepath"
 	"time"
 
@@ -17,11 +18,15 @@ var (
 
 	locales    map[string]statusLocale
 	localesErr error
+
+	domain string
 )
 
 func init() {
 	parameters, parametersErr = getStatusParameters()
 	locales, localesErr = getStatusLocales()
+
+	domain = os.Getenv("DOMAIN_NAME")
 }
 
 func process(
@@ -36,9 +41,11 @@ func process(
 	)
 
 	for _, param := range parameters {
-		client := lol.StatusClient{Region: param.Id}
+		var (
+			client = lol.StatusClient{Region: param.Id}
+			dpath  = filepath.Join("lol", param.Region)
+		)
 
-		dpath := filepath.Join("lol", param.Region)
 		for _, locale := range param.Locales {
 			entries, err := client.GetItems(locale)
 			if err != nil {
@@ -46,30 +53,33 @@ func process(
 				continue
 			}
 
-			feed := createLolStatusFeed(locale, entries)
-
 			fpath := filepath.Join(dpath, fmt.Sprintf("status.%s", locale))
-			files, errors := internal.GenerateFeedFiles(feed, fpath)
+
+			localeData, ok := locales[locale]
+			if !ok {
+				localeData = locales["en_US"]
+			}
+
+			// Create Feed
+			feed := createLolStatusFeed(param.Id, &localeData, entries)
+
+			// Generate Atom, JSONFeed, RSS file
+			files, errors := internal.GenerateFeedFiles(feed, domain, fpath)
 			if len(errors) > 0 {
 				errorsCollector.CollectMany(errors)
 			}
 
-			rawpath := filepath.Join(dpath, fmt.Sprintf("status.%s.json", locale))
-			rawjson, err := internal.MarshalJSON(entries)
+			// Generate RAW file
+			rawpath := fmt.Sprintf("%s.json", fpath)
+			rawfile, err := internal.GenerateRawFile(entries, rawpath)
 			if err != nil {
 				errorsCollector.Collect(err)
 			} else {
-				files = append(files, internal.FeedFile{
-					Name:     rawpath,
-					MimeType: "application/json",
-					Buffer:   rawjson,
-				})
+				files = append(files, rawfile)
 			}
 
 			generatedFiles = append(generatedFiles, files...)
 		}
-
-		time.Sleep(500 * time.Millisecond)
 	}
 
 	uploaderErrors := uploader.UploadFiles(generatedFiles)
@@ -80,7 +90,7 @@ func process(
 	channel <- *errorsCollector
 }
 
-func StatusHandler() error {
+func handler() error {
 	if len(parameters) == 0 {
 		return fmt.Errorf("no parameters found: %w", parametersErr)
 	}
@@ -93,6 +103,7 @@ func StatusHandler() error {
 		channelsCount   = 5
 		errorsCollector = internal.NewErrorCollector()
 		uploader        = internal.NewS3Uploader()
+		invalidator     = internal.NewCloudFrontInvalidator()
 	)
 
 	for _, chunk := range internal.SplitSliceToChunks(parameters, channelsCount) {
@@ -103,6 +114,14 @@ func StatusHandler() error {
 		errorsCollector.CollectFrom(<-channel)
 	}
 
+	invalidationErr := invalidator.Invalidate(
+		fmt.Sprintf("lolstatus-%v", time.Now().UTC().Unix()),
+		[]string{"/lol/*/status*"},
+	)
+	if invalidationErr != nil {
+		errorsCollector.Collect(invalidationErr)
+	}
+
 	if errorsCollector.Size() > 0 {
 		fmt.Printf(errorsCollector.Error())
 	}
@@ -111,5 +130,5 @@ func StatusHandler() error {
 }
 
 func main() {
-	lambda.Start(StatusHandler)
+	lambda.Start(handler)
 }

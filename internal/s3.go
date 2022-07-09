@@ -3,7 +3,6 @@ package internal
 import (
 	"bytes"
 	"context"
-	"fmt"
 	"log"
 	"os"
 
@@ -57,8 +56,6 @@ func NewS3Uploader() *S3FeedUploader {
 	if bucketName == "" {
 		log.Fatalf("unable to load bucket name")
 	}
-
-	fmt.Println(bucketName)
 
 	s3Client := s3.NewFromConfig(cfg)
 	s3Manager := manager.NewUploader(s3Client)
