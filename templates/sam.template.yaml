@@ -56,3 +56,22 @@ Resources:
             Schedule: !Sub
               - 'rate(${TTL} minutes)'
               - TTL: !Ref TTL
+  LeagueOfLegendsNewsChecker:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties:
+      FunctionName: !Sub
+        - 'rito-news-lol-news-${Stage}'
+        - Stage: !Ref Stage
+      CodeUri: ../lol/news/
+      Handler: news
+      Runtime: go1.x
+      Architectures:
+        - x86_64
+      Events:
+        Schedule:
+          Type: Schedule
+          Properties:
+            Schedule: !Sub
+              - 'rate(${TTL} minutes)'
+              - TTL: !Ref TTL
+      
