@@ -43,7 +43,7 @@ func process(
 
 	for _, param := range parameters {
 		var (
-			client = lol.StatusClient{Region: param.Id}
+			client = lol.StatusClient{Region: param.ID}
 			dpath  = filepath.Join("lol", param.Region)
 		)
 
@@ -53,7 +53,7 @@ func process(
 			// Get new items
 			entries, err := client.GetItems(locale)
 			if err != nil {
-				errorsCollector.Collect(fmt.Errorf("can't get items for %s-%s: %w", param.Id, locale, err))
+				errorsCollector.Collect(fmt.Errorf("can't get items for %s-%s: %w", param.ID, locale, err))
 				continue
 			}
 
@@ -62,11 +62,11 @@ func process(
 			if err != nil {
 				errorsCollector.Collect(err)
 			} else if internal.IsEqual(existingEntries, entries, compareLolStatusEntry) {
-				fmt.Printf("%s-%s doesn't require update\n", param.Id, locale)
+				fmt.Printf("%s-%s doesn't require update\n", param.ID, locale)
 				continue
 			}
 
-			fmt.Printf("updating %s-%s...\n", param.Id, locale)
+			fmt.Printf("updating %s-%s...\n", param.ID, locale)
 
 			localeData, ok := locales[locale]
 			if !ok {
@@ -74,7 +74,7 @@ func process(
 			}
 
 			// Create Feed
-			feed := createLolStatusFeed(param.Id, &localeData, entries)
+			feed := createLolStatusFeed(param.ID, &localeData, entries)
 
 			// Generate Atom, JSONFeed, RSS file
 			files, errors := internal.GenerateFeedFiles(feed, domain, fpath)
@@ -84,6 +84,7 @@ func process(
 
 			// Generate RAW file
 			rawpath := fmt.Sprintf("%s.json", fpath)
+
 			rawfile, err := internal.GenerateRawFile(entries, rawpath)
 			if err != nil {
 				errorsCollector.Collect(err)
@@ -111,9 +112,11 @@ func handler() error {
 	if len(parameters) == 0 {
 		return fmt.Errorf("no parameters found: %w", parametersErr)
 	}
+
 	if len(locales) == 0 {
 		return fmt.Errorf("no locales found: %w", localesErr)
 	}
+
 	if domain == "" {
 		return fmt.Errorf("unable to load domain name")
 	}
@@ -134,6 +137,7 @@ func handler() error {
 
 	for i := 0; i < channelsCount; i++ {
 		errorsCollector.CollectFrom(<-errorsChannel)
+
 		generatedFilesCount = generatedFilesCount + <-filesChannel
 	}
 
@@ -152,7 +156,7 @@ func handler() error {
 
 	if errorsCollector.Size() > 0 {
 		fmt.Printf("%d errors occured\n", errorsCollector.Size())
-		fmt.Printf(errorsCollector.Error())
+		fmt.Println(errorsCollector.Error())
 	}
 
 	return nil

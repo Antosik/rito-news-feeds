@@ -53,6 +53,7 @@ func NewS3Uploader() *S3FeedUploader {
 	if err != nil {
 		log.Fatalf("unable to load SDK config, %v", err)
 	}
+
 	if bucketName == "" {
 		log.Fatalf("unable to load bucket name")
 	}

@@ -12,11 +12,11 @@ import (
 )
 
 var (
-	distributionId string
+	distributionID string
 )
 
 func init() {
-	distributionId = os.Getenv("DISTRIBUTION_ID")
+	distributionID = os.Getenv("DISTRIBUTION_ID")
 }
 
 type CloudFrontInvalidator struct {
@@ -25,7 +25,7 @@ type CloudFrontInvalidator struct {
 
 func (cfi *CloudFrontInvalidator) Invalidate(id string, paths []string) error {
 	_, err := cfi.cfClient.CreateInvalidation(context.TODO(), &cloudfront.CreateInvalidationInput{
-		DistributionId: aws.String(distributionId),
+		DistributionId: aws.String(distributionID),
 		InvalidationBatch: &types.InvalidationBatch{
 			CallerReference: aws.String(id),
 			Paths: &types.Paths{
@@ -34,6 +34,7 @@ func (cfi *CloudFrontInvalidator) Invalidate(id string, paths []string) error {
 			},
 		},
 	})
+
 	return err
 }
 
@@ -42,6 +43,7 @@ func NewCloudFrontInvalidator() *CloudFrontInvalidator {
 	if err != nil {
 		log.Fatalf("unable to load SDK config, %v", err)
 	}
+
 	if bucketName == "" {
 		log.Fatalf("unable to load bucket name")
 	}

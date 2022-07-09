@@ -10,8 +10,8 @@ type JSONFeed struct {
 	Version     string          `json:"version"`
 	Title       string          `json:"title"`
 	Description string          `json:"description,omitempty"`
-	HomePageUrl string          `json:"home_page_url"`
-	FeedUrl     string          `json:"feed_url"`
+	HomePageURL string          `json:"home_page_url"`
+	FeedURL     string          `json:"feed_url"`
 	Language    string          `json:"language"`
 	Author      *JSONFeedAuthor `json:"author,omitempty"`
 	Items       []JSONFeedEntry `json:"items"`
@@ -40,15 +40,10 @@ type JSONFeedEntry struct {
 func ConvertFeedEntryToJSONFeedEntry(entry *FeedEntry) JSONFeedEntry {
 	var (
 		authors = make([]JSONFeedAuthor, len(entry.Authors))
-		tags    = make([]string, len(entry.Categories))
 	)
 
 	for i, author := range entry.Authors {
 		authors[i] = JSONFeedAuthor{Name: author}
-	}
-
-	for i, category := range entry.Categories {
-		tags[i] = category
 	}
 
 	return JSONFeedEntry{
@@ -58,7 +53,7 @@ func ConvertFeedEntryToJSONFeedEntry(entry *FeedEntry) JSONFeedEntry {
 		Image:       entry.Image,
 		URL:         entry.Link,
 		Author:      authors,
-		Tags:        tags,
+		Tags:        entry.Categories,
 		Published:   entry.CreatedAt.Format(time.RFC3339),
 	}
 }
@@ -73,8 +68,8 @@ func ConvertFeedToJSONFeed(feed *Feed) JSONFeed {
 		Version:     "https://jsonfeed.org/version/1.1",
 		Title:       feed.Title,
 		Description: feed.Description,
-		HomePageUrl: feed.Links.Alternate,
-		FeedUrl:     feed.Links.Self,
+		HomePageURL: feed.Links.Alternate,
+		FeedURL:     feed.Links.Self,
 		Language:    feed.Language,
 		Author: &JSONFeedAuthor{
 			Name: "Antosik",

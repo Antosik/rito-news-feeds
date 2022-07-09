@@ -56,11 +56,11 @@ func GenerateRawFile(entries interface{}, name string) (FeedFile, error) {
 	rawjson, err := MarshalJSON(entries)
 	if err != nil {
 		return FeedFile{}, err
-	} else {
-		return FeedFile{
-			Name:     name,
-			MimeType: "application/json",
-			Buffer:   rawjson,
-		}, nil
 	}
+
+	return FeedFile{
+		Name:     name,
+		MimeType: "application/json",
+		Buffer:   rawjson,
+	}, nil
 }

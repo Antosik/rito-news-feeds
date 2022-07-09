@@ -19,7 +19,7 @@ var parametersFile []byte
 var localeFile []byte
 
 type statusParameters struct {
-	Id      string   `json:"id"`
+	ID      string   `json:"id"`
 	Region  string   `json:"region"`
 	Locales []string `json:"locales"`
 }
@@ -40,7 +40,7 @@ func lolStatusEntryToFeedEntry(entry lol.StatusEntry) internal.FeedEntry {
 	}
 }
 
-func createLolStatusFeed(regionId string, locale *statusLocale, entries []lol.StatusEntry) internal.Feed {
+func createLolStatusFeed(regionID string, locale *statusLocale, entries []lol.StatusEntry) internal.Feed {
 	feedEntries := make([]internal.FeedEntry, len(entries))
 	for i, entry := range entries {
 		feedEntries[i] = lolStatusEntryToFeedEntry(entry)
@@ -52,7 +52,7 @@ func createLolStatusFeed(regionId string, locale *statusLocale, entries []lol.St
 	}
 
 	links := internal.FeedLinks{
-		Alternate: fmt.Sprintf("https://status.riotgames.com/lol?region=%s&locale=%s", regionId, locale.Locale),
+		Alternate: fmt.Sprintf("https://status.riotgames.com/lol?region=%s&locale=%s", regionID, locale.Locale),
 	}
 
 	return internal.Feed{

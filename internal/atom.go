@@ -105,10 +105,12 @@ func ConvertFeedToAtom(feed *Feed) Atom {
 	}
 
 	links := make([]AtomLink, 0, 2)
+
 	links = append(links, AtomLink{
 		Href: feed.Links.Alternate,
 		Rel:  "alternate",
 	})
+
 	if feed.Links.Self != "" {
 		links = append(links, AtomLink{
 			Href: feed.Links.Self,

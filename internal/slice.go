@@ -11,29 +11,32 @@ func SplitSliceToChunks[T interface{}](arr []T, count int) [][]T {
 	for i := 0; i < count; i++ {
 		start := pointer
 		pointer = pointer + size
+
 		if i < exceed {
 			pointer = pointer + 1
 		}
+
 		if pointer > len(arr) {
 			pointer = len(arr)
 		}
 
 		result[i] = make([]T, pointer-start)
 		copy(result[i], arr[start:pointer])
-
 	}
 
 	return result
 }
 
-func IsEqual[T comparable](a, b []T, comparator func(a, b T) bool) bool {
+func IsEqual[T interface{}](a, b []T, comparator func(a, b T) bool) bool {
 	if len(a) != len(b) {
 		return false
 	}
+
 	for i := range a {
 		if !comparator(a[i], b[i]) {
 			return false
 		}
 	}
+
 	return true
 }

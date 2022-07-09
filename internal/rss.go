@@ -54,21 +54,11 @@ type RSSEntry struct {
 
 func ConvertFeedEntryToRSSEntry(entry *FeedEntry) RSSEntry {
 	var (
-		image      *RSSEnclosure
-		authors    = make([]string, len(entry.Authors))
-		categories = make([]string, len(entry.Categories))
+		image *RSSEnclosure
 	)
 
 	if entry.Image != "" {
 		image = &RSSEnclosure{URL: entry.Image, Length: 0, Type: "image/*"}
-	}
-
-	for i, author := range entry.Authors {
-		authors[i] = author
-	}
-
-	for i, category := range entry.Categories {
-		categories[i] = category
 	}
 
 	return RSSEntry{
@@ -78,8 +68,8 @@ func ConvertFeedEntryToRSSEntry(entry *FeedEntry) RSSEntry {
 		Link:        entry.Link,
 		GUID:        entry.Link,
 		Enclosure:   image,
-		Author:      strings.Join(authors, ", "),
-		Category:    categories,
+		Author:      strings.Join(entry.Authors, ", "),
+		Category:    entry.Categories,
 	}
 }
 
