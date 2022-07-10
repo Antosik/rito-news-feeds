@@ -1,5 +1,7 @@
 github.com/Antosik/rito-news v0.0.0-20220710134415-925a345b4c6c h1:ijPWSqEzaF7tBEiked0mFtg8BD0zMfhnQ+K0vtXyf8c=
 github.com/Antosik/rito-news v0.0.0-20220710134415-925a345b4c6c/go.mod h1:AbxaUBXD+J9S2nZcprU88FICQnfHX+ZI/nuiK79xAWk=
+github.com/Antosik/rito-news v0.0.0-20220710194750-c683df196668 h1:o7a9k9Klgx6jeiLiqeLkKGskRnlHHO8eb8veKMYkZrQ=
+github.com/Antosik/rito-news v0.0.0-20220710194750-c683df196668/go.mod h1:AbxaUBXD+J9S2nZcprU88FICQnfHX+ZI/nuiK79xAWk=
 github.com/aws/aws-lambda-go v1.32.1 h1:ls0FU8Mt7ayJszb945zFkUfzxhkQTli8mpJstVcDtCY=
 github.com/aws/aws-lambda-go v1.32.1/go.mod h1:jwFe2KmMsHmffA1X2R09hH6lFzJQxzI8qK17ewzbQMM=
 github.com/aws/aws-sdk-go-v2 v1.16.7 h1:zfBwXus3u14OszRxGcqCDS4MfMCv10e8SMJ2r8Xm0Ns=
