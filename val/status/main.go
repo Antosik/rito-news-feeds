@@ -48,9 +48,9 @@ func process(
 		client := val.StatusClient{Region: param.ID}
 
 		for _, locale := range locales {
-			dpath := filepath.Join("val", locale.Locale)
-
-			fpath := filepath.Join(dpath, fmt.Sprintf("status.%s", param.ID))
+			fpath := internal.FormatFilePath(
+				filepath.Join("val", locale.Locale, fmt.Sprintf("status.%s", param.ID)),
+			)
 
 			// Get new items
 			entries, err := client.GetItems(locale.Locale)

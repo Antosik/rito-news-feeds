@@ -44,7 +44,7 @@ func process(
 	for _, param := range parameters {
 		var (
 			client = val.EsportsClient{Locale: strings.ToLower(param.Locale)}
-			fpath  = filepath.Join("val", param.Locale, "esports")
+			fpath  = internal.FormatFilePath(filepath.Join("val", param.Locale, "esports"))
 		)
 
 		// Get new items

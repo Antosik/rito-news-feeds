@@ -47,7 +47,7 @@ func process(
 			dpath  = filepath.Join("lol", param.Region)
 		)
 
-		fpath := filepath.Join(dpath, fmt.Sprintf("news.%s", param.Locale))
+		fpath := internal.FormatFilePath(filepath.Join(dpath, fmt.Sprintf("news.%s", param.Locale)))
 
 		// Get new items
 		entries, err := client.GetItems(articlesCount)

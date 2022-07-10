@@ -44,10 +44,8 @@ func process(
 	for _, param := range parameters {
 		var (
 			client = val.NewsClient{Locale: strings.ToLower(param.Locale)}
-			dpath  = filepath.Join("val", param.Locale)
+			fpath  = internal.FormatFilePath(filepath.Join("val", param.Locale, "news"))
 		)
-
-		fpath := filepath.Join(dpath, "news")
 
 		// Get new items
 		entries, err := client.GetItems(articlesCount)

@@ -2,6 +2,7 @@ package internal
 
 import (
 	"fmt"
+	"strings"
 )
 
 type FeedFile struct {
@@ -63,4 +64,8 @@ func GenerateRawFile(entries interface{}, name string) (FeedFile, error) {
 		MimeType: "application/json",
 		Buffer:   rawjson,
 	}, nil
+}
+
+func FormatFilePath(path string) string {
+	return strings.ReplaceAll(strings.ToLower(path), "_", "-")
 }
