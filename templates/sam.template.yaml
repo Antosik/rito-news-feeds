@@ -158,6 +158,43 @@ Resources:
           Resource: !Sub
             - "arn:aws:cloudfront::${AWS::AccountId}:distribution/${DistributionId}"
             - DistributionId: !Ref DistributionId
+  
+  VALORANTStatusChecker:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Metadata:
+      BuildMethod: makefile
+    Properties:
+      Runtime: provided.al2
+      Architectures:
+        - arm64
+      FunctionName: !Sub
+        - 'rito-news-val-status-${Stage}'
+        - Stage: !Ref Stage
+      CodeUri: ../
+      Handler: bootstrap
+      Events:
+        Schedule:
+          Type: Schedule
+          Properties:
+            Schedule: !Sub
+              - 'rate(${TTL} minutes)'
+              - TTL: !Ref TTL
+      Policies:
+      - Statement:
+        - Sid: S3WriteAccess
+          Effect: Allow
+          Action:
+          - s3:PutObject
+          Resource: !Sub
+            - "arn:aws:s3:::${BucketName}/val/*"
+            - BucketName: !Ref BucketName
+        - Sid: CloudFrontInvalidationCreationAccess
+          Effect: Allow
+          Action:
+          - cloudfront:CreateInvalidation
+          Resource: !Sub
+            - "arn:aws:cloudfront::${AWS::AccountId}:distribution/${DistributionId}"
+            - DistributionId: !Ref DistributionId
   VALORANTNewsChecker:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
     Metadata:
