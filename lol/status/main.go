@@ -33,7 +33,7 @@ func init() {
 }
 
 func process(
-	filesChannel chan int,
+	filesChannel chan []string,
 	errorsChannel chan internal.ErrorCollector,
 	parameters []statusParameters,
 	locales map[string]statusLocale,
@@ -108,7 +108,7 @@ func process(
 	}
 
 	errorsChannel <- *errorsCollector
-	filesChannel <- len(generatedFiles)
+	filesChannel <- internal.GetAbsolutePathsFromFeedFiles(generatedFiles)
 }
 
 func handler() error {
@@ -125,12 +125,12 @@ func handler() error {
 	}
 
 	var (
-		errorsChannel       = make(chan internal.ErrorCollector)
-		filesChannel        = make(chan int)
-		generatedFilesCount = 0
-		errorsCollector     = internal.NewErrorCollector()
-		uploader            = internal.NewS3Uploader()
-		invalidator         = internal.NewCloudFrontInvalidator()
+		errorsChannel   = make(chan internal.ErrorCollector)
+		filesChannel    = make(chan []string)
+		filesCollector  = []string{}
+		errorsCollector = internal.NewErrorCollector()
+		uploader        = internal.NewS3Uploader()
+		invalidator     = internal.NewCloudFrontInvalidator()
 	)
 
 	for _, chunk := range internal.SplitSliceToChunks(parameters, channelsCount) {
@@ -140,16 +140,16 @@ func handler() error {
 	for i := 0; i < channelsCount; i++ {
 		errorsCollector.CollectFrom(<-errorsChannel)
 
-		generatedFilesCount = generatedFilesCount + <-filesChannel
+		filesCollector = append(filesCollector, <-filesChannel...)
 	}
 
-	fmt.Printf("Generated files count: %d\n", generatedFilesCount)
+	fmt.Printf("Generated files count: %d\n", len(filesCollector))
 
 	// Invalidate CloudFront if new files were generated
-	if generatedFilesCount > 0 {
+	if len(filesCollector) > 0 {
 		invalidationErr := invalidator.Invalidate(
 			fmt.Sprintf("lolstatus-%v", time.Now().UTC().Unix()),
-			[]string{"/lol/*/status*"},
+			filesCollector,
 		)
 		if invalidationErr != nil {
 			errorsCollector.Collect(invalidationErr)
