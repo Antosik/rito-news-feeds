@@ -1,0 +1,82 @@
+[
+  {
+      "locale": "en-US",
+      "title": "Latest News",
+      "description": "The most up-to-date news from the world of Legends of Runeterra."
+  },
+  {
+      "locale": "ko-KR",
+      "title": "최신 소식",
+      "description": "룬 테라의 전설의 세계에서 가장 최신 뉴스."
+  },
+  {
+      "locale": "fr-FR",
+      "title": "À l'affiche",
+      "description": "Les toutes dernières infos à propos de Legends of Runeterra."
+  },
+  {
+      "locale": "es-ES",
+      "title": "Últimas noticias",
+      "description": "Las últimas noticias del universo de Legends of Runeterra."
+  },
+  {
+      "locale": "es-MX",
+      "title": "Últimas noticias",
+      "description": "Las noticias más recientes del mundo de Legends of Runeterra."
+  },
+  {
+      "locale": "de-DE",
+      "title": "Aktuelles",
+      "description": "Die aktuellsten Neuigkeiten aus der Welt von Legends of Runeterra."
+  },
+  {
+      "locale": "it-IT",
+      "title": "Ultime novità",
+      "description": "Le ultimissime novità sul mondo di Legends of Runeterra."
+  },
+  {
+      "locale": "pl-PL",
+      "title": "Najnowsze wiadomości",
+      "description": "Aktualne wiadomości ze świata Legends of Runeterra."
+  },
+  {
+      "locale": "pt-BR",
+      "title": "Notícias mais recentes",
+      "description": "As notícias que acabaram de sair do forno sobre o mundo de Legends of Runeterra."
+  },
+  {
+      "locale": "tr-TR",
+      "title": "En Son Haberler",
+      "description": "Legends of Runeterra dünyasından en son haberler."
+  },
+  {
+      "locale": "ru-RU",
+      "title": "Свежие новости",
+      "description": "Самые свежие новости из мира Legends of Runeterra."
+  },
+  {
+      "locale": "ja-JP",
+      "title": "最新ニュース",
+      "description": "レジェンド・オブ・ルネテラの世界からの最新ニュース。"
+  },
+  {
+      "locale": "en-SG",
+      "title": "Latest News",
+      "description": "The most up-to-date news from the world of Legends of Runeterra."
+  },
+  {
+      "locale": "zh-TW",
+      "title": "Latest News",
+      "description": "The most up-to-date news from the world of Legends of Runeterra."
+  },
+  {
+      "locale": "th-TH",
+      "title": "Latest News",
+      "description": "The most up-to-date news from the world of Legends of Runeterra."
+  },
+  {
+      "locale": "vi-VN",
+      "title": "Latest News",
+      "description": "The most up-to-date news from the world of Legends of Runeterra."
+  }
+]
