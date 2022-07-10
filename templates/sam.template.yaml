@@ -132,7 +132,7 @@ Resources:
         - Stage: !Ref Stage
       CodeUri: ../
       Handler: lolesports
-      Timeout: 120
+      Timeout: 500
       Layers:
         - !Ref ChromiumLayer
       Events:
@@ -244,7 +244,7 @@ Resources:
         - Stage: !Ref Stage
       CodeUri: ../
       Handler: valesports
-      Timeout: 120
+      Timeout: 500
       Layers:
         - !Ref ChromiumLayer
       Events:
@@ -320,7 +320,7 @@ Resources:
         - Stage: !Ref Stage
       CodeUri: ../
       Handler: lornews
-      Timeout: 120
+      Timeout: 500
       Layers:
         - !Ref ChromiumLayer
       Events:
