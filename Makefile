@@ -55,3 +55,7 @@ build-LeagueOfLegendsNewsChecker:
 build-LeagueOfLegendsEsportsChecker:
 	GOARCH=amd64 GOOS=linux go build -trimpath -o ./lolesports lol/esports/main.go lol/esports/utils.go
 	mv ./lolesports $(ARTIFACTS_DIR)/lolesports
+
+build-VALORANTNewsChecker:
+	GOARCH=arm64 GOOS=linux go build -trimpath -o ./valnews val/news/main.go val/news/utils.go
+	mv ./valnews $(ARTIFACTS_DIR)/bootstrap

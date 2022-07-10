@@ -1,0 +1,92 @@
+[
+  {
+    "locale": "en-US",
+    "title": "VALORANT News: Updates, videos, and latest patch notes",
+    "description": "The most up-to-date news from the world of VALORANT."
+  },
+  {
+    "locale": "en-GB",
+    "title": "VALORANT News: Updates, videos, and latest patch notes",
+    "description": "The most up-to-date news from the world of VALORANT."
+  },
+  {
+    "locale": "de-DE",
+    "title": "VALORANT-News: Updates, Videos und die neuesten Patchnotes",
+    "description": "Aktuelle Nachrichten aus der Welt von VALORANT."
+  },
+  {
+    "locale": "es-ES",
+    "title": "Noticias de VALORANT: Actualizaciones, vídeos y últimas notas de versión",
+    "description": "Las últimas novedades del mundo de VALORANT."
+  },
+  {
+    "locale": "fr-FR",
+    "title": "Actualités de VALORANT : mises à jour, vidéos et notes des derniers patchs",
+    "description": "Les actualités les plus fraîches de l'univers de VALORANT."
+  },
+  {
+    "locale": "it-IT",
+    "title": "Notizie su VALORANT: aggiornamenti, video e le note sulla patch più recenti",
+    "description": "Le notizie più aggiornate dal mondo di VALORANT."
+  },
+  {
+    "locale": "pl-PL",
+    "title": "Aktualności VALORANT: aktualizacje, filmy i najnowsze opisy patchów",
+    "description": "Najświeższe wieści ze świata VALORANT."
+  },
+  {
+    "locale": "ru-RU",
+    "title": "Новости VALORANT: изменения, видео и описания последних обновлений",
+    "description": "Самые свежие новости из мира VALORANT"
+  },
+  {
+    "locale": "tr-TR",
+    "title": "VALORANT Haberleri: Güncellemeler, videolar ve en yeni yama notları",
+    "description": "VALORANT dünyasına dair en güncel haberler."
+  },
+  {
+    "locale": "es-MX",
+    "title": "Noticias de VALORANT: noticias, videos y notas de versión",
+    "description": "Las noticias más recientes del mundo de VALORANT."
+  },
+  {
+    "locale": "id-ID",
+    "title": "Berita VALORANT: Info, video, dan catatan patch terbaru",
+    "description": "Berita paling terkini dari dunia VALORANT."
+  },
+  {
+    "locale": "ja-JP",
+    "title": "VALORANT ニュース：アップデート、ビデオ、最新のパッチノート",
+    "description": "VALORANTの最新ニュースはこちらから。"
+  },
+  {
+    "locale": "ko-KR",
+    "title": "발로란트 소식: 업데이트, 영상, 최신 패치 노트",
+    "description": "발로란트 최신 소식을 전해드립니다."
+  },
+  {
+    "locale": "pt-BR",
+    "title": "Notícias de VALORANT: atualizações, vídeos e as mais recentes Notas de Atualização",
+    "description": "As últimas notícias sobre o mundo de VALORANT."
+  },
+  {
+    "locale": "th-TH",
+    "title": "ข่าวสาร VALORANT: อัปเดต วิดีโอ และบันทึกแพตช์ล่าสุด",
+    "description": "ข่าวสารล่าสุดจากโลกของ VALORANT"
+  },
+  {
+    "locale": "vi-VN",
+    "title": "Tin tức VALORANT: Thông tin cập nhật, video và các bản cập nhật mới nhất",
+    "description": "Những thông tin nóng hổi nhất về VALORANT trên toàn thế giới."
+  },
+  {
+    "locale": "zh-TW",
+    "title": "《特戰英豪》最新消息：包含新聞、影片與更新公告",
+    "description": "《特戰英豪》的最新消息都在這裡。"
+  },
+  {
+    "locale": "ar-AE",
+    "title": "أخبار VALORANT: التحديثات، ومقاطع الفيديو، وآخر معلومات إصدارات التحديث",
+    "description": "أحدث الأخبار من عالم VALORANT."
+  }
+]
