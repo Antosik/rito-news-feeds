@@ -1,0 +1,62 @@
+[
+  {
+    "locale": "en_US",
+    "title": "Legends of Runeterra - Service Status"
+  },
+  {
+    "locale": "de_DE",
+    "title": "Legends of Runeterra - Service_Status"
+  },
+  {
+    "locale": "es_ES",
+    "title": "Estado del servicio de - Legends of Runeterra"
+  },
+  {
+    "locale": "es_MX",
+    "title": "Estado del servicio de - Legends of Runeterra"
+  },
+  {
+    "locale": "fr_FR",
+    "title": "Legends of Runeterra - État du service"
+  },
+  {
+    "locale": "it_IT",
+    "title": "Legends of Runeterra - Stato del servizio"
+  },
+  {
+    "locale": "ja_JP",
+    "title": "レジェンド・オブ・ルーンテラ - サービス状況"
+  },
+  {
+    "locale": "ko_KR",
+    "title": "레전드 오브 룬테라 - 서비스 상태"
+  },
+  {
+    "locale": "pl_PL",
+    "title": "Status usługi - Legends of Runeterra"
+  },
+  {
+    "locale": "pt_BR",
+    "title": "Legends of Runeterra - Status de serviço"
+  },
+  {
+    "locale": "ru_RU",
+    "title": "Legends of Runeterra - Статус сервера"
+  },
+  {
+    "locale": "th_TH",
+    "title": "Legends of Runeterra - สถานะการให้บริการ"
+  },
+  {
+    "locale": "tr_TR",
+    "title": "Legends of Runeterra - Hizmet Durumu"
+  },
+  {
+    "locale": "vi_VN",
+    "title": "Trạng thái dịch vụ - Huyền Thoại Runeterra"
+  },
+  {
+    "locale": "zh_TW",
+    "title": "《符文大地傳說》 - 服務狀態"
+  }
+]

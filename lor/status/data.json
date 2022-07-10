@@ -1,0 +1,18 @@
+[
+  {
+    "id": "americas",
+    "name": "Americas"
+  },
+  {
+    "id": "apac",
+    "name": "Asia-Pacific"
+  },
+  {
+    "id": "asia",
+    "name": "Asia"
+  },
+  {
+    "id": "europe",
+    "name": "Europe"
+  }
+]

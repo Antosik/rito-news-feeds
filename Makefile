@@ -67,3 +67,7 @@ build-VALORANTNewsChecker:
 build-VALORANTEsportsChecker:
 	GOARCH=amd64 GOOS=linux go build -trimpath -o ./valesports val/esports/main.go val/esports/utils.go
 	mv ./valesports $(ARTIFACTS_DIR)/valesports
+
+build-LegendsOfRuneterraStatusChecker:
+	GOARCH=arm64 GOOS=linux go build -trimpath -o ./lorstatus lor/status/main.go lor/status/utils.go
+	mv ./lorstatus $(ARTIFACTS_DIR)/bootstrap
