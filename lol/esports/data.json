@@ -1,0 +1,87 @@
+[
+    {
+        "locale": "en-US",
+        "region": "na",
+        "title": "League of Legends - Esports News"
+    },
+    {
+        "locale": "en-GB",
+        "region": "euw",
+        "title": "League of Legends - Esports News"
+    },
+    {
+        "locale": "de-DE",
+        "region": "euw",
+        "title": "League of Legends - Esports News"
+    },
+    {
+        "locale": "es-ES",
+        "region": "euw",
+        "title": "League of Legends - Noticias de eSports"
+    },
+    {
+        "locale": "es-MX",
+        "region": "lan",
+        "title": "League of Legends - Noticias de eSports"
+    },
+    {
+        "locale": "fr-FR",
+        "region": "euw",
+        "title": "League of Legends - Nouvelles eSports"
+    },
+    {
+        "locale": "it-IT",
+        "region": "euw",
+        "title": "League of Legends - Notizie eSports"
+    },
+    {
+        "locale": "pl-PL",
+        "region": "eune",
+        "title": "League of Legends - Wiadomości e-sportowe"
+    },
+    {
+        "locale": "pt-BR",
+        "region": "br",
+        "title": "League of Legends - Notícias eSports"
+    },
+    {
+        "locale": "ru-RU",
+        "region": "ru",
+        "title": "League of Legends - Новости киберспорта"
+    },
+    {
+        "locale": "tr-TR",
+        "region": "tr",
+        "title": "League of Legends - Esports Haberleri"
+    },
+    {
+        "locale": "ja-JP",
+        "region": "jp",
+        "title": "リーグ・オブ・レジェンド - Eスポーツニュース"
+    },
+    {
+        "locale": "ko-KR",
+        "region": "kr",
+        "title": "리그 오브 레전드 - 스포츠 뉴스"
+    },
+    {
+        "locale": "zh-TW",
+        "region": "garena",
+        "title": "League of Legends - Esports News"
+    },
+    {
+        "locale": "th-TH",
+        "region": "garena",
+        "title": "League of Legends - Esports News"
+    },
+    {
+        "locale": "en-PH",
+        "region": "garena",
+        "title": "League of Legends - Esports News"
+    },
+    {
+        "locale": "en-SG",
+        "region": "garena",
+        "title": "League of Legends - Esports News"
+    }
+]

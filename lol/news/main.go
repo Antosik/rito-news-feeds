@@ -27,7 +27,6 @@ const (
 
 func init() {
 	parameters, parametersErr = getNewsParameters()
-
 	domain = os.Getenv("DOMAIN_NAME")
 }
 

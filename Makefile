@@ -22,7 +22,7 @@ validate:
 deploy:
 	sam deploy \
 		--stack-name rito-news-feeds \
-		--template ./templates/sam.template.yaml \
+		--config-file ./templates/samconfig.toml \
 		--parameter-overrides \
 			ParameterKey=DomainName,ParameterValue=${DOMAIN_NAME} \
 			ParameterKey=BucketName,ParameterValue=${BUCKET_NAME} \
@@ -43,3 +43,15 @@ cdn-update:
 		--region us-east-1 \
 		--capabilities CAPABILITY_NAMED_IAM \
 		--parameters ParameterKey=DomainName,ParameterValue=${DOMAIN_NAME} ParameterKey=BucketName,ParameterValue=${BUCKET_NAME}
+
+build-LeagueOfLegendsStatusChecker:
+	GOARCH=arm64 GOOS=linux go build -trimpath -o ./lolstatus lol/status/main.go lol/status/utils.go
+	mv ./lolstatus $(ARTIFACTS_DIR)/bootstrap
+
+build-LeagueOfLegendsNewsChecker:
+	GOARCH=arm64 GOOS=linux go build -trimpath -o ./lolnews lol/news/main.go lol/news/utils.go
+	mv ./lolnews $(ARTIFACTS_DIR)/bootstrap
+
+build-LeagueOfLegendsEsportsChecker:
+	GOARCH=amd64 GOOS=linux go build -trimpath -o ./lolesports lol/esports/main.go lol/esports/utils.go
+	mv ./lolesports $(ARTIFACTS_DIR)/lolesports

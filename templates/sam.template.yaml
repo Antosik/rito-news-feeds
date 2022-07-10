@@ -38,17 +38,28 @@ Parameters:
     Description: Time-to-live for RSS feeds
 
 Resources:
+  ChromiumLayer:
+    Type: AWS::Serverless::LayerVersion
+    Metadata:
+      BuildMethod: makefile
+    Properties:
+      LayerName: chromium-layer
+      ContentUri: ../layers/chromium
+      CompatibleRuntimes:
+        - go1.x
   LeagueOfLegendsStatusChecker:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Metadata:
+      BuildMethod: makefile
     Properties:
+      Runtime: provided.al2
+      Architectures:
+        - arm64
       FunctionName: !Sub
         - 'rito-news-lol-status-${Stage}'
         - Stage: !Ref Stage
-      CodeUri: ../lol/status/
-      Handler: status
-      Runtime: go1.x
-      Architectures:
-        - x86_64
+      CodeUri: ../
+      Handler: bootstrap
       Events:
         Schedule:
           Type: Schedule
@@ -56,17 +67,35 @@ Resources:
             Schedule: !Sub
               - 'rate(${TTL} minutes)'
               - TTL: !Ref TTL
+      Policies:
+      - Statement:
+        - Sid: S3WriteAccess
+          Effect: Allow
+          Action:
+          - s3:PutObject
+          Resource: !Sub
+            - "arn:aws:s3:::${BucketName}/lol/*"
+            - BucketName: !Ref BucketName
+        - Sid: CloudFrontInvalidationCreationAccess
+          Effect: Allow
+          Action:
+          - cloudfront:CreateInvalidation
+          Resource: !Sub
+            - "arn:aws:cloudfront::${AWS::AccountId}:distribution/${DistributionId}"
+            - DistributionId: !Ref DistributionId
   LeagueOfLegendsNewsChecker:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Metadata:
+      BuildMethod: makefile
     Properties:
+      Runtime: provided.al2
+      Architectures:
+        - arm64
       FunctionName: !Sub
         - 'rito-news-lol-news-${Stage}'
         - Stage: !Ref Stage
-      CodeUri: ../lol/news/
-      Handler: news
-      Runtime: go1.x
-      Architectures:
-        - x86_64
+      CodeUri: ../
+      Handler: bootstrap
       Events:
         Schedule:
           Type: Schedule
@@ -74,4 +103,58 @@ Resources:
             Schedule: !Sub
               - 'rate(${TTL} minutes)'
               - TTL: !Ref TTL
-      
+      Policies:
+      - Statement:
+        - Sid: S3WriteAccess
+          Effect: Allow
+          Action:
+          - s3:PutObject
+          Resource: !Sub
+            - "arn:aws:s3:::${BucketName}/lol/*"
+            - BucketName: !Ref BucketName
+        - Sid: CloudFrontInvalidationCreationAccess
+          Effect: Allow
+          Action:
+          - cloudfront:CreateInvalidation
+          Resource: !Sub
+            - "arn:aws:cloudfront::${AWS::AccountId}:distribution/${DistributionId}"
+            - DistributionId: !Ref DistributionId
+  LeagueOfLegendsEsportsChecker:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Metadata:
+      BuildMethod: makefile
+    Properties:
+      Runtime: go1.x
+      Architectures:
+        - x86_64
+      FunctionName: !Sub
+        - 'rito-news-lol-esports-${Stage}'
+        - Stage: !Ref Stage
+      CodeUri: ../
+      Handler: lolesports
+      Timeout: 120
+      Layers:
+        - !Ref ChromiumLayer
+      Events:
+        Schedule:
+          Type: Schedule
+          Properties:
+            Schedule: !Sub
+              - 'rate(${TTL} minutes)'
+              - TTL: !Ref TTL
+      Policies:
+      - Statement:
+        - Sid: S3WriteAccess
+          Effect: Allow
+          Action:
+          - s3:PutObject
+          Resource: !Sub
+            - "arn:aws:s3:::${BucketName}/lol/*"
+            - BucketName: !Ref BucketName
+        - Sid: CloudFrontInvalidationCreationAccess
+          Effect: Allow
+          Action:
+          - cloudfront:CreateInvalidation
+          Resource: !Sub
+            - "arn:aws:cloudfront::${AWS::AccountId}:distribution/${DistributionId}"
+            - DistributionId: !Ref DistributionId

@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"strings"
 	"time"
 
 	"github.com/Antosik/rito-news-feeds/internal"
@@ -13,30 +14,26 @@ import (
 )
 
 var (
-	parameters    []statusParameters
+	parameters    []esportsParameters
 	parametersErr error
-
-	locales    map[string]statusLocale
-	localesErr error
 
 	domain string
 )
 
 const (
+	articlesCount = 100
 	channelsCount = 5
 )
 
 func init() {
-	parameters, parametersErr = getStatusParameters()
-	locales, localesErr = getStatusLocales()
+	parameters, parametersErr = getEsportsParameters()
 	domain = os.Getenv("DOMAIN_NAME")
 }
 
 func process(
 	filesChannel chan int,
 	errorsChannel chan internal.ErrorCollector,
-	parameters []statusParameters,
-	locales map[string]statusLocale,
+	parameters []esportsParameters,
 	uploader *internal.S3FeedUploader,
 ) {
 	var (
@@ -46,57 +43,50 @@ func process(
 
 	for _, param := range parameters {
 		var (
-			client = lol.StatusClient{Region: param.ID}
+			client = lol.EsportsClient{Locale: strings.ToLower(param.Locale)}
 			dpath  = filepath.Join("lol", param.Region)
 		)
 
-		for _, locale := range param.Locales {
-			fpath := filepath.Join(dpath, fmt.Sprintf("status.%s", locale))
+		fpath := filepath.Join(dpath, fmt.Sprintf("esports.%s", param.Locale))
 
-			// Get new items
-			entries, err := client.GetItems(locale)
-			if err != nil {
-				errorsCollector.Collect(fmt.Errorf("can't get items for %s-%s: %w", param.ID, locale, err))
-				continue
-			}
-
-			// Check diff with existing data
-			existingEntries, err := internal.GetExistingRawEntries[lol.StatusEntry](domain, fpath)
-			if err != nil {
-				errorsCollector.Collect(err)
-			} else if internal.IsEqual(existingEntries, entries, compareLolStatusEntry) {
-				fmt.Printf("%s-%s doesn't require update\n", param.ID, locale)
-				continue
-			}
-
-			fmt.Printf("updating %s-%s...\n", param.ID, locale)
-
-			localeData, ok := locales[locale]
-			if !ok {
-				localeData = locales["en_US"]
-			}
-
-			// Create Feed
-			feed := createLolStatusFeed(param.ID, &localeData, entries)
-
-			// Generate Atom, JSONFeed, RSS file
-			files, errors := internal.GenerateFeedFiles(feed, domain, fpath)
-			if len(errors) > 0 {
-				errorsCollector.CollectMany(errors)
-			}
-
-			// Generate RAW file
-			rawpath := fmt.Sprintf("%s.json", fpath)
-
-			rawfile, err := internal.GenerateRawFile(entries, rawpath)
-			if err != nil {
-				errorsCollector.Collect(err)
-			} else {
-				files = append(files, rawfile)
-			}
-
-			generatedFiles = append(generatedFiles, files...)
+		// Get new items
+		entries, err := client.GetItems(articlesCount)
+		if err != nil {
+			errorsCollector.Collect(fmt.Errorf("can't get items for %s-%s: %w", param.Region, param.Locale, err))
+			continue
 		}
+
+		// Check diff with existing data
+		existingEntries, err := internal.GetExistingRawEntries[lol.EsportsEntry](domain, fpath)
+		if err != nil {
+			errorsCollector.Collect(err)
+		} else if internal.IsEqual(existingEntries, entries, compareLolEsportsEntry) {
+			fmt.Printf("%s-%s doesn't require update\n", param.Region, param.Locale)
+			continue
+		}
+
+		fmt.Printf("updating %s-%s...\n", param.Region, param.Locale)
+
+		// Create Feed
+		feed := createLolEsportsFeed(param, entries)
+
+		// Generate Atom, JSONFeed, RSS file
+		files, errors := internal.GenerateFeedFiles(feed, domain, fpath)
+		if len(errors) > 0 {
+			errorsCollector.CollectMany(errors)
+		}
+
+		// Generate RAW file
+		rawpath := fmt.Sprintf("%s.json", fpath)
+
+		rawfile, err := internal.GenerateRawFile(entries, rawpath)
+		if err != nil {
+			errorsCollector.Collect(err)
+		} else {
+			files = append(files, rawfile)
+		}
+
+		generatedFiles = append(generatedFiles, files...)
 	}
 
 	// Upload files to S3
@@ -116,10 +106,6 @@ func handler() error {
 		return fmt.Errorf("no parameters found: %w", parametersErr)
 	}
 
-	if len(locales) == 0 {
-		return fmt.Errorf("no locales found: %w", localesErr)
-	}
-
 	if domain == "" {
 		return fmt.Errorf("unable to load domain name")
 	}
@@ -134,7 +120,7 @@ func handler() error {
 	)
 
 	for _, chunk := range internal.SplitSliceToChunks(parameters, channelsCount) {
-		go process(filesChannel, errorsChannel, chunk, locales, uploader)
+		go process(filesChannel, errorsChannel, chunk, uploader)
 	}
 
 	for i := 0; i < channelsCount; i++ {
@@ -148,8 +134,8 @@ func handler() error {
 	// Invalidate CloudFront if new files were generated
 	if generatedFilesCount > 0 {
 		invalidationErr := invalidator.Invalidate(
-			fmt.Sprintf("lolstatus-%v", time.Now().UTC().Unix()),
-			[]string{"/lol/*/status*"},
+			fmt.Sprintf("lolesports-%v", time.Now().UTC().Unix()),
+			[]string{"/lol/*/esports*"},
 		)
 		if invalidationErr != nil {
 			errorsCollector.Collect(invalidationErr)
@@ -158,7 +144,7 @@ func handler() error {
 
 	if errorsCollector.Size() > 0 {
 		fmt.Printf("%d errors occured\n", errorsCollector.Size())
-		fmt.Println(errorsCollector.Error())
+		fmt.Printf(errorsCollector.Error())
 	}
 
 	return nil
