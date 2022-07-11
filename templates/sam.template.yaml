@@ -87,7 +87,7 @@ Resources:
             - DistributionId: !Ref DistributionId
   
   LeagueOfLegendsNewsChecker:
-    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Type: AWS::Serverless::Function
     Metadata:
       BuildMethod: makefile
     Properties:
@@ -124,7 +124,7 @@ Resources:
             - DistributionId: !Ref DistributionId
   
   LeagueOfLegendsEsportsChecker:
-    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Type: AWS::Serverless::Function
     Metadata:
       BuildMethod: makefile
     Properties:
@@ -166,7 +166,7 @@ Resources:
 
   #region VALORANT
   VALORANTStatusChecker:
-    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Type: AWS::Serverless::Function
     Metadata:
       BuildMethod: makefile
     Properties:
@@ -203,7 +203,7 @@ Resources:
             - DistributionId: !Ref DistributionId
   
   VALORANTNewsChecker:
-    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Type: AWS::Serverless::Function
     Metadata:
       BuildMethod: makefile
     Properties:
@@ -240,7 +240,7 @@ Resources:
             - DistributionId: !Ref DistributionId
   
   VALORANTEsportsChecker:
-    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Type: AWS::Serverless::Function
     Metadata:
       BuildMethod: makefile
     Properties:
@@ -282,7 +282,7 @@ Resources:
 
   #region Legends of Runeterra
   LegendsOfRuneterraStatusChecker:
-    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Type: AWS::Serverless::Function
     Metadata:
       BuildMethod: makefile
     Properties:
@@ -319,7 +319,7 @@ Resources:
             - DistributionId: !Ref DistributionId
   
   LegendsOfRuneterraNewsChecker:
-    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Type: AWS::Serverless::Function
     Metadata:
       BuildMethod: makefile
     Properties:
@@ -449,6 +449,46 @@ Resources:
         - Stage: !Ref Stage
       CodeUri: ../
       Handler: bootstrap
+      Events:
+        Schedule:
+          Type: Schedule
+          Properties:
+            Schedule: !Sub
+              - 'rate(${TTL} minutes)'
+              - TTL: !Ref TTL
+      Policies:
+      - Statement:
+        - Sid: S3WriteAccess
+          Effect: Allow
+          Action:
+          - s3:PutObject
+          Resource: !Sub
+            - "arn:aws:s3:::${BucketName}/wr/*"
+            - BucketName: !Ref BucketName
+        - Sid: CloudFrontInvalidationCreationAccess
+          Effect: Allow
+          Action:
+          - cloudfront:CreateInvalidation
+          Resource: !Sub
+            - "arn:aws:cloudfront::${AWS::AccountId}:distribution/${DistributionId}"
+            - DistributionId: !Ref DistributionId
+
+  WildRiftEsportsChecker:
+    Type: AWS::Serverless::Function
+    Metadata:
+      BuildMethod: makefile
+    Properties:
+      Runtime: go1.x
+      Architectures:
+        - x86_64
+      FunctionName: !Sub
+        - 'rito-news-wr-esports-${Stage}'
+        - Stage: !Ref Stage
+      CodeUri: ../
+      Handler: wresports
+      Timeout: 600
+      Layers:
+        - !Ref ChromiumLayer
       Events:
         Schedule:
           Type: Schedule
