@@ -513,3 +513,45 @@ Resources:
             - "arn:aws:cloudfront::${AWS::AccountId}:distribution/${DistributionId}"
             - DistributionId: !Ref DistributionId
   #endregion Wild Rift
+
+  #region Riot Games
+  RiotGamesNewsChecker:
+    Type: AWS::Serverless::Function
+    Metadata:
+      BuildMethod: makefile
+    Properties:
+      Runtime: go1.x
+      Architectures:
+        - x86_64
+      FunctionName: !Sub
+        - 'rito-news-riotgames-news-${Stage}'
+        - Stage: !Ref Stage
+      CodeUri: ../
+      Handler: riotgamesnews
+      Timeout: 600
+      Layers:
+        - !Ref ChromiumLayer
+      Events:
+        Schedule:
+          Type: Schedule
+          Properties:
+            Schedule: !Sub
+              - 'rate(${TTL} minutes)'
+              - TTL: !Ref TTL
+      Policies:
+      - Statement:
+        - Sid: S3WriteAccess
+          Effect: Allow
+          Action:
+          - s3:PutObject
+          Resource: !Sub
+            - "arn:aws:s3:::${BucketName}/riotgames/*"
+            - BucketName: !Ref BucketName
+        - Sid: CloudFrontInvalidationCreationAccess
+          Effect: Allow
+          Action:
+          - cloudfront:CreateInvalidation
+          Resource: !Sub
+            - "arn:aws:cloudfront::${AWS::AccountId}:distribution/${DistributionId}"
+            - DistributionId: !Ref DistributionId
+  #endregion Riot Games

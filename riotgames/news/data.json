@@ -1,0 +1,90 @@
+[
+    {
+        "locale": "en",
+        "title": "News | Riot Games"
+    },
+    {
+        "locale": "id",
+        "title": "Berita | Riot Games"
+    },
+    {
+        "locale": "ms",
+        "title": "Berita | Riot Games"
+    },
+    {
+        "locale": "pt-br",
+        "title": "Noticias | Riot Games"
+    },
+    {
+        "locale": "cs",
+        "title": "Novinky | Riot Games"
+    },
+    {
+        "locale": "fr",
+        "title": "Actus | Riot Games"
+    },
+    {
+        "locale": "de",
+        "title": "Neuigkeiten | Riot Games"
+    },
+    {
+        "locale": "el",
+        "title": "Ειδησεις | Riot Games"
+    },
+    {
+        "locale": "hu",
+        "title": "Hírek | Riot Games"
+    },
+    {
+        "locale": "it",
+        "title": "Notizie | Riot Games"
+    },
+    {
+        "locale": "ja",
+        "title": "ニュース | Riot Games"
+    },
+    {
+        "locale": "ko",
+        "title": "소식 | Riot Games"
+    },
+    {
+        "locale": "es-419",
+        "title": "Noticias | Riot Games"
+    },
+    {
+        "locale": "pl",
+        "title": "Aktualności | Riot Games"
+    },
+    {
+        "locale": "ro",
+        "title": "Știri | Riot Games"
+    },
+    {
+        "locale": "ru",
+        "title": "Новости | Riot Games"
+    },
+    {
+        "locale": "zh-cn",
+        "title": "新闻 | Riot Games"
+    },
+    {
+        "locale": "es",
+        "title": "Noticias | Riot Games"
+    },
+    {
+        "locale": "th",
+        "title": "ข่าว | Riot Games"
+    },
+    {
+        "locale": "zh-hant",
+        "title": "最新消息 | Riot Games"
+    },
+    {
+        "locale": "tr",
+        "title": "Haberler | Riot Games"
+    },
+    {
+        "locale": "vi",
+        "title": "Tin tức | Riot Games"
+    }
+]

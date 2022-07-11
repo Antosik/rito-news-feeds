@@ -105,3 +105,9 @@ build-WildRiftEsportsChecker:
 	GOARCH=amd64 GOOS=linux go build -trimpath -o ./wresports wr/esports/main.go wr/esports/utils.go
 	mv ./wresports $(ARTIFACTS_DIR)/wresports
 #endregion Build: WildRift
+
+#endregion Build: RiotGames
+build-RiotGamesNewsChecker:
+	GOARCH=amd64 GOOS=linux go build -trimpath -o ./riotgamesnews riotgames/news/main.go riotgames/news/utils.go
+	mv ./riotgamesnews $(ARTIFACTS_DIR)/riotgamesnews
+#endregion Build: RiotGames

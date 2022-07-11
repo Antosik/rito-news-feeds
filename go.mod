@@ -1,5 +1,5 @@
 require (
-	github.com/Antosik/rito-news v0.0.0-20220711133443-07e427a4b439
+	github.com/Antosik/rito-news v0.0.0-20220711211616-e857ed23765f
 	github.com/aws/aws-lambda-go v1.32.1
 	github.com/aws/aws-sdk-go-v2 v1.16.7
 	github.com/aws/aws-sdk-go-v2/config v1.15.13
@@ -9,6 +9,8 @@ require (
 )
 
 require (
+	github.com/PuerkitoBio/goquery v1.8.0 // indirect
+	github.com/andybalholm/cascadia v1.3.1 // indirect
 	github.com/aws/aws-sdk-go-v2/aws/protocol/eventstream v1.4.3 // indirect
 	github.com/aws/aws-sdk-go-v2/credentials v1.12.8 // indirect
 	github.com/aws/aws-sdk-go-v2/feature/ec2/imds v1.12.8 // indirect
@@ -28,6 +30,7 @@ require (
 	github.com/ysmood/goob v0.4.0 // indirect
 	github.com/ysmood/gson v0.7.2 // indirect
 	github.com/ysmood/leakless v0.7.0 // indirect
+	golang.org/x/net v0.0.0-20210916014120-12bc252f5db8 // indirect
 )
 
 replace gopkg.in/yaml.v2 => gopkg.in/yaml.v2 v2.2.8
