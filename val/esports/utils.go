@@ -43,7 +43,7 @@ func createValEsportsFeed(parameters esportsParameters, entries []val.EsportsEnt
 	}
 
 	links := internal.FeedLinks{
-		Alternate: fmt.Sprintf("https://valorantesports.com/news"),
+		Alternate: "https://valorantesports.com/news",
 	}
 
 	return internal.Feed{

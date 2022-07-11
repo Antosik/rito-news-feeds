@@ -144,7 +144,7 @@ func handler() error {
 
 	if errorsCollector.Size() > 0 {
 		fmt.Printf("%d errors occured\n", errorsCollector.Size())
-		fmt.Printf(errorsCollector.Error())
+		fmt.Println(errorsCollector.Error())
 	}
 
 	return nil

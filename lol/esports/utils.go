@@ -44,7 +44,7 @@ func createLolEsportsFeed(parameters esportsParameters, entries []lol.EsportsEnt
 	}
 
 	links := internal.FeedLinks{
-		Alternate: fmt.Sprintf("https://lolesports.com/news"),
+		Alternate: "https://lolesports.com/news",
 	}
 
 	return internal.Feed{
