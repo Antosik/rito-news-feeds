@@ -16,7 +16,6 @@ var parametersFile []byte
 
 type esportsParameters struct {
 	Locale string `json:"locale"`
-	Region string `json:"region"`
 	Title  string `json:"title"`
 }
 

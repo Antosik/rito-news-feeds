@@ -44,15 +44,13 @@ func process(
 	for _, param := range parameters {
 		var (
 			client = lol.NewsClient{Locale: strings.ToLower(param.Locale)}
-			dpath  = filepath.Join("lol", param.Region)
+			fpath  = internal.FormatFilePath(filepath.Join("lol", param.Locale, "news"))
 		)
-
-		fpath := internal.FormatFilePath(filepath.Join(dpath, fmt.Sprintf("news.%s", param.Locale)))
 
 		// Get new items
 		entries, err := client.GetItems(articlesCount)
 		if err != nil {
-			errorsCollector.Collect(fmt.Errorf("can't get items for %s-%s: %w", param.Region, param.Locale, err))
+			errorsCollector.Collect(fmt.Errorf("can't get items for %s: %w", param.Locale, err))
 			continue
 		}
 
@@ -61,11 +59,11 @@ func process(
 		if err != nil {
 			errorsCollector.Collect(err)
 		} else if internal.IsEqual(existingEntries, entries, compareLolNewsEntry) {
-			fmt.Printf("%s-%s doesn't require update\n", param.Region, param.Locale)
+			fmt.Printf("%s doesn't require update\n", param.Locale)
 			continue
 		}
 
-		fmt.Printf("updating %s-%s...\n", param.Region, param.Locale)
+		fmt.Printf("updating %s...\n", param.Locale)
 
 		// Create Feed
 		feed := createLolNewsFeed(param, entries)

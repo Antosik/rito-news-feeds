@@ -17,7 +17,6 @@ var parametersFile []byte
 
 type newsParameters struct {
 	Locale      string `json:"locale"`
-	Region      string `json:"region"`
 	Title       string `json:"title"`
 	Description string `json:"description"`
 }
