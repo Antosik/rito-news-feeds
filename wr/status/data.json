@@ -1,0 +1,38 @@
+[
+  {
+    "id": "br",
+    "name": "BR"
+  },
+  {
+    "id": "eu",
+    "name": "EU"
+  },
+  {
+    "id": "jp",
+    "name": "JP"
+  },
+  {
+    "id": "kr",
+    "name": "KR"
+  },
+  {
+    "id": "latam",
+    "name": "LATAM"
+  },
+  {
+    "id": "mei",
+    "name": "MEI"
+  },
+  {
+    "id": "na",
+    "name": "NA"
+  },
+  {
+    "id": "ru",
+    "name": "RU"
+  },
+  {
+    "id": "sea",
+    "name": "SEA"
+  }
+]

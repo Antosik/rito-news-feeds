@@ -397,3 +397,42 @@ Resources:
             - "arn:aws:cloudfront::${AWS::AccountId}:distribution/${DistributionId}"
             - DistributionId: !Ref DistributionId
   #endregion Teamfight Tactics
+
+  #region Wild Rift
+  WildRiftStatusChecker:
+    Type: AWS::Serverless::Function
+    Metadata:
+      BuildMethod: makefile
+    Properties:
+      Runtime: provided.al2
+      Architectures:
+        - arm64
+      FunctionName: !Sub
+        - 'rito-news-wr-status-${Stage}'
+        - Stage: !Ref Stage
+      CodeUri: ../
+      Handler: bootstrap
+      Events:
+        Schedule:
+          Type: Schedule
+          Properties:
+            Schedule: !Sub
+              - 'rate(${TTL} minutes)'
+              - TTL: !Ref TTL
+      Policies:
+      - Statement:
+        - Sid: S3WriteAccess
+          Effect: Allow
+          Action:
+          - s3:PutObject
+          Resource: !Sub
+            - "arn:aws:s3:::${BucketName}/wr/*"
+            - BucketName: !Ref BucketName
+        - Sid: CloudFrontInvalidationCreationAccess
+          Effect: Allow
+          Action:
+          - cloudfront:CreateInvalidation
+          Resource: !Sub
+            - "arn:aws:cloudfront::${AWS::AccountId}:distribution/${DistributionId}"
+            - DistributionId: !Ref DistributionId
+  #endregion Wild Rift
