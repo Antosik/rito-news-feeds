@@ -358,3 +358,42 @@ Resources:
             - "arn:aws:cloudfront::${AWS::AccountId}:distribution/${DistributionId}"
             - DistributionId: !Ref DistributionId
   #endregion Legends of Runeterra
+
+  #region Teamfight Tactics
+  TeamfightTacticsNewsChecker:
+    Type: AWS::Serverless::Function
+    Metadata:
+      BuildMethod: makefile
+    Properties:
+      Runtime: provided.al2
+      Architectures:
+        - arm64
+      FunctionName: !Sub
+        - 'rito-news-tft-news-${Stage}'
+        - Stage: !Ref Stage
+      CodeUri: ../
+      Handler: bootstrap
+      Events:
+        Schedule:
+          Type: Schedule
+          Properties:
+            Schedule: !Sub
+              - 'rate(${TTL} minutes)'
+              - TTL: !Ref TTL
+      Policies:
+      - Statement:
+        - Sid: S3WriteAccess
+          Effect: Allow
+          Action:
+          - s3:PutObject
+          Resource: !Sub
+            - "arn:aws:s3:::${BucketName}/tft/*"
+            - BucketName: !Ref BucketName
+        - Sid: CloudFrontInvalidationCreationAccess
+          Effect: Allow
+          Action:
+          - cloudfront:CreateInvalidation
+          Resource: !Sub
+            - "arn:aws:cloudfront::${AWS::AccountId}:distribution/${DistributionId}"
+            - DistributionId: !Ref DistributionId
+  #endregion Teamfight Tactics

@@ -85,3 +85,9 @@ build-LegendsOfRuneterraNewsChecker:
 	GOARCH=amd64 GOOS=linux go build -trimpath -o ./lornews lor/news/main.go lor/news/utils.go
 	mv ./lornews $(ARTIFACTS_DIR)/lornews
 #endregion Build: Legends of Runeterra
+
+#region Build: Teamfight Tactics
+build-TeamfightTacticsNewsChecker:
+	GOARCH=arm64 GOOS=linux go build -trimpath -o ./tftnews tft/news/main.go tft/news/utils.go
+	mv ./tftnews $(ARTIFACTS_DIR)/bootstrap
+#endregion Build: Teamfight Tactics
