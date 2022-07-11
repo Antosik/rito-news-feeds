@@ -2,10 +2,8 @@ AWSTemplateFormatVersion: '2010-09-09'
 Transform: AWS::Serverless-2016-10-31
 Description: >
   rito-news-feeds
-  
   Generates an Atom, RSS and JSON feed based on github.com/Antosik/rito-news data
 
-# More info about Globals: https://github.com/awslabs/serverless-application-model/blob/master/docs/globals.rst
 Globals:
   Function:
     MemorySize: 512
@@ -38,6 +36,7 @@ Parameters:
     Description: Time-to-live for RSS feeds
 
 Resources:
+  #region Chrome layer
   ChromiumLayer:
     Type: AWS::Serverless::LayerVersion
     Metadata:
@@ -47,8 +46,11 @@ Resources:
       ContentUri: ../layers/chromium
       CompatibleRuntimes:
         - go1.x
+  #endregion Chrome layer
+
+  #region League of Legends
   LeagueOfLegendsStatusChecker:
-    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Type: AWS::Serverless::Function
     Metadata:
       BuildMethod: makefile
     Properties:
@@ -83,6 +85,7 @@ Resources:
           Resource: !Sub
             - "arn:aws:cloudfront::${AWS::AccountId}:distribution/${DistributionId}"
             - DistributionId: !Ref DistributionId
+  
   LeagueOfLegendsNewsChecker:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
     Metadata:
@@ -119,6 +122,7 @@ Resources:
           Resource: !Sub
             - "arn:aws:cloudfront::${AWS::AccountId}:distribution/${DistributionId}"
             - DistributionId: !Ref DistributionId
+  
   LeagueOfLegendsEsportsChecker:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
     Metadata:
@@ -132,7 +136,7 @@ Resources:
         - Stage: !Ref Stage
       CodeUri: ../
       Handler: lolesports
-      Timeout: 500
+      Timeout: 600
       Layers:
         - !Ref ChromiumLayer
       Events:
@@ -158,7 +162,9 @@ Resources:
           Resource: !Sub
             - "arn:aws:cloudfront::${AWS::AccountId}:distribution/${DistributionId}"
             - DistributionId: !Ref DistributionId
-  
+  #endregion League of Legends
+
+  #region VALORANT
   VALORANTStatusChecker:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
     Metadata:
@@ -195,6 +201,7 @@ Resources:
           Resource: !Sub
             - "arn:aws:cloudfront::${AWS::AccountId}:distribution/${DistributionId}"
             - DistributionId: !Ref DistributionId
+  
   VALORANTNewsChecker:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
     Metadata:
@@ -231,6 +238,7 @@ Resources:
           Resource: !Sub
             - "arn:aws:cloudfront::${AWS::AccountId}:distribution/${DistributionId}"
             - DistributionId: !Ref DistributionId
+  
   VALORANTEsportsChecker:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
     Metadata:
@@ -244,7 +252,7 @@ Resources:
         - Stage: !Ref Stage
       CodeUri: ../
       Handler: valesports
-      Timeout: 500
+      Timeout: 600
       Layers:
         - !Ref ChromiumLayer
       Events:
@@ -270,7 +278,9 @@ Resources:
           Resource: !Sub
             - "arn:aws:cloudfront::${AWS::AccountId}:distribution/${DistributionId}"
             - DistributionId: !Ref DistributionId
-            
+  #endregion VALORANT
+
+  #region Legends of Runeterra
   LegendsOfRuneterraStatusChecker:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
     Metadata:
@@ -307,6 +317,7 @@ Resources:
           Resource: !Sub
             - "arn:aws:cloudfront::${AWS::AccountId}:distribution/${DistributionId}"
             - DistributionId: !Ref DistributionId
+  
   LegendsOfRuneterraNewsChecker:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
     Metadata:
@@ -320,7 +331,7 @@ Resources:
         - Stage: !Ref Stage
       CodeUri: ../
       Handler: lornews
-      Timeout: 500
+      Timeout: 600
       Layers:
         - !Ref ChromiumLayer
       Events:
@@ -346,3 +357,4 @@ Resources:
           Resource: !Sub
             - "arn:aws:cloudfront::${AWS::AccountId}:distribution/${DistributionId}"
             - DistributionId: !Ref DistributionId
+  #endregion Legends of Runeterra
