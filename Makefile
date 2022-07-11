@@ -96,4 +96,8 @@ build-TeamfightTacticsNewsChecker:
 build-WildRiftStatusChecker:
 	GOARCH=arm64 GOOS=linux go build -trimpath -o ./wrstatus wr/status/main.go wr/status/utils.go
 	mv ./wrstatus $(ARTIFACTS_DIR)/bootstrap
+
+build-WildRiftNewsChecker:
+	GOARCH=arm64 GOOS=linux go build -trimpath -o ./wrnews wr/news/main.go wr/news/utils.go
+	mv ./wrnews $(ARTIFACTS_DIR)/bootstrap
 #endregion Build: WildRift
