@@ -50,7 +50,7 @@ func process(
 
 		for _, locale := range param.Locales {
 			fpath := internal.FormatFilePath(
-				filepath.Join("lol", locale, fmt.Sprintf("status.%s", param.ID)),
+				filepath.Join("lol", locale, fmt.Sprintf("status.%s", param.Region)),
 			)
 
 			// Get new items
@@ -95,9 +95,13 @@ func process(
 				files = append(files, rawfile)
 			}
 
-			invalidatePaths = append(invalidatePaths, fmt.Sprintf("/%s.*", fpath))
 			generatedFiles = append(generatedFiles, files...)
 		}
+
+		invalidationPath := internal.FormatFilePath(
+			filepath.Join("/", "lol", "*", fmt.Sprintf("status.%s.*", param.Region)),
+		)
+		invalidatePaths = append(invalidatePaths, invalidationPath)
 	}
 
 	// Upload files to S3

@@ -91,8 +91,12 @@ func process(
 			}
 
 			generatedFiles = append(generatedFiles, files...)
-			invalidatePaths = append(invalidatePaths, fmt.Sprintf("/%s.*", fpath))
 		}
+
+		invalidationPath := internal.FormatFilePath(
+			filepath.Join("/", "lor", "*", fmt.Sprintf("status.%s.*", param.ID)),
+		)
+		invalidatePaths = append(invalidatePaths, invalidationPath)
 	}
 
 	// Upload files to S3
