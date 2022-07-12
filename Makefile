@@ -110,4 +110,8 @@ build-WildRiftEsportsChecker:
 build-RiotGamesNewsChecker:
 	GOARCH=amd64 GOOS=linux go build -trimpath -o ./riotgamesnews riotgames/news/main.go riotgames/news/utils.go
 	mv ./riotgamesnews $(ARTIFACTS_DIR)/riotgamesnews
+
+build-RiotGamesJobsChecker:
+	GOARCH=amd64 GOOS=linux go build -trimpath -o ./riotgamesjobs riotgames/jobs/main.go riotgames/jobs/utils.go
+	mv ./riotgamesjobs $(ARTIFACTS_DIR)/riotgamesjobs
 #endregion Build: RiotGames
