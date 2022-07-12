@@ -47,7 +47,7 @@ func process(
 
 		var (
 			client = riotgames.JobsClient{Locale: strings.ToLower(param.Locale)}
-			fpath  = internal.FormatFilePath(filepath.Join("riotgames", param.Locale, "news"))
+			fpath  = internal.FormatFilePath(filepath.Join("riotgames", param.Locale, "jobs"))
 		)
 
 		// Get new items
