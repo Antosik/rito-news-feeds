@@ -99,6 +99,12 @@ func process(
 		}
 	}
 
+	if len(invalidatePaths) > len(parameters)/3 {
+		invalidatePaths = []string{
+			internal.FormatFilePath(filepath.Join("/", "riotgames", "*", "news.*")),
+		}
+	}
+
 	errorsChannel <- *errorsCollector
 	filesChannel <- invalidatePaths
 }
