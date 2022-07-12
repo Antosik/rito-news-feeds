@@ -37,6 +37,7 @@ func process(
 	uploader *internal.S3FeedUploader,
 ) {
 	var (
+		invalidatePaths []string
 		generatedFiles  []internal.FeedFile
 		errorsCollector = internal.NewErrorCollector()
 	)
@@ -85,6 +86,7 @@ func process(
 		}
 
 		generatedFiles = append(generatedFiles, files...)
+		invalidatePaths = append(invalidatePaths, fmt.Sprintf("/%s.*", fpath))
 	}
 
 	// Upload files to S3
@@ -96,7 +98,7 @@ func process(
 	}
 
 	errorsChannel <- *errorsCollector
-	filesChannel <- internal.GetAbsolutePathsFromFeedFiles(generatedFiles)
+	filesChannel <- invalidatePaths
 }
 
 func handler() error {

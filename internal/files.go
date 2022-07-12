@@ -69,13 +69,3 @@ func GenerateRawFile(entries interface{}, name string) (FeedFile, error) {
 func FormatFilePath(path string) string {
 	return strings.ReplaceAll(strings.ToLower(path), "_", "-")
 }
-
-func GetAbsolutePathsFromFeedFiles(files []FeedFile) []string {
-	paths := make([]string, len(files))
-
-	for i, file := range files {
-		paths[i] = "/" + file.Name
-	}
-
-	return paths
-}
