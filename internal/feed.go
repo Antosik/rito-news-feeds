@@ -27,6 +27,10 @@ func (entry *FeedEntry) JSONFeed() JSONFeedEntry {
 	return ConvertFeedEntryToJSONFeedEntry(entry)
 }
 
+func (entry *FeedEntry) String() string {
+	return entry.Link
+}
+
 type FeedLinks struct {
 	Self      string
 	Alternate string

@@ -64,6 +64,6 @@ func getJobsParameters() ([]jobsParameters, error) {
 	return data, nil
 }
 
-func compareRiotGamesJobsEntry(a riotgames.JobsEntry, b riotgames.JobsEntry) bool {
-	return a.URL == b.URL
+func getRiotGamesJobsEntryKey(item riotgames.JobsEntry) string {
+	return item.URL
 }

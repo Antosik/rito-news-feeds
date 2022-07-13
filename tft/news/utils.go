@@ -71,6 +71,6 @@ func getNewsParameters() ([]newsParameters, error) {
 	return data, nil
 }
 
-func compareTftNewsEntry(a tft.NewsEntry, b tft.NewsEntry) bool {
-	return a.UID == b.UID
+func getTftNewsEntryKey(item tft.NewsEntry) string {
+	return item.URL
 }

@@ -71,6 +71,6 @@ func getNewsParameters() ([]newsParameters, error) {
 	return data, nil
 }
 
-func compareWrNewsEntry(a wr.NewsEntry, b wr.NewsEntry) bool {
-	return a.UID == b.UID
+func getWrNewsEntryKey(item wr.NewsEntry) string {
+	return item.URL
 }

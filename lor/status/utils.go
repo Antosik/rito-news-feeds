@@ -86,6 +86,6 @@ func getStatusLocales() (map[string]statusLocale, error) {
 	return localeMap, nil
 }
 
-func compareLorStatusEntry(a lor.StatusEntry, b lor.StatusEntry) bool {
-	return a.UID == b.UID
+func getLorStatusEntryKey(item lor.StatusEntry) string {
+	return item.URL
 }

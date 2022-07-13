@@ -78,11 +78,15 @@ func (p *VALNewsProcessor) ProcessParameters(
 	existingEntries, err := internal.GetExistingRawEntries[val.NewsEntry](domain, fpath)
 	if err != nil {
 		errorsCollector.Collect(err)
-	} else if internal.IsEqual(existingEntries, entries, compareValNewsEntry) {
+	}
+
+	diff, isEqual := internal.CompareAndGetDiff(existingEntries, entries, getValNewsEntryKey)
+	if isEqual {
 		fmt.Printf("%s doesn't require update\n", param.Locale)
 		return nil, nil
 	}
 
+	fmt.Printf("Found diff: %s...\n", diff)
 	fmt.Printf("Updating %s...\n", param.Locale)
 
 	// Create Feed

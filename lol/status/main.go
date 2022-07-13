@@ -83,11 +83,15 @@ func (p *LoLStatusProcessor) ProcessParameters(
 		existingEntries, err := internal.GetExistingRawEntries[lol.StatusEntry](domain, fpath)
 		if err != nil {
 			errorsCollector.Collect(err)
-		} else if internal.IsEqual(existingEntries, entries, compareLolStatusEntry) {
-			fmt.Printf("%s-%s doesn't require update\n", param.ID, locale)
-			continue
 		}
 
+		diff, isEqual := internal.CompareAndGetDiff(existingEntries, entries, getLolStatusEntryKey)
+		if isEqual {
+			fmt.Printf("%s-%s doesn't require update\n", param.ID, locale)
+			return nil, nil
+		}
+
+		fmt.Printf("Found diff: %s...\n", diff)
 		fmt.Printf("Updating %s-%s...\n", param.ID, locale)
 
 		localeData, ok := locales[locale]

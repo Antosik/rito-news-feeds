@@ -83,11 +83,15 @@ func (p *LoRStatusProcessor) ProcessParameters(
 		existingEntries, err := internal.GetExistingRawEntries[lor.StatusEntry](domain, fpath)
 		if err != nil {
 			errorsCollector.Collect(err)
-		} else if internal.IsEqual(existingEntries, entries, compareLorStatusEntry) {
-			fmt.Printf("%s-%s doesn't require update\n", param.ID, locale.Locale)
-			continue
 		}
 
+		diff, isEqual := internal.CompareAndGetDiff(existingEntries, entries, getLorStatusEntryKey)
+		if isEqual {
+			fmt.Printf("%s-%s doesn't require update\n", param.ID, locale.Locale)
+			return nil, nil
+		}
+
+		fmt.Printf("Found diff: %s...\n", diff)
 		fmt.Printf("Updating %s-%s...\n", param.ID, locale.Locale)
 
 		// Create Feed

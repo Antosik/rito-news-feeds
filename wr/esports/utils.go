@@ -65,6 +65,6 @@ func getEsportsParameters() ([]esportsParameters, error) {
 	return data, nil
 }
 
-func compareWrEsportsEntry(a wr.EsportsEntry, b wr.EsportsEntry) bool {
-	return a.UID == b.UID
+func getWrEsportsEntryKey(item wr.EsportsEntry) string {
+	return item.URL
 }

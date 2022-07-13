@@ -68,6 +68,6 @@ func getNewsParameters() ([]newsParameters, error) {
 	return data, nil
 }
 
-func compareLolNewsEntry(a lol.NewsEntry, b lol.NewsEntry) bool {
-	return a.UID == b.UID
+func getLolNewsEntryKey(item lol.NewsEntry) string {
+	return item.URL
 }
