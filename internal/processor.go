@@ -21,14 +21,14 @@ type MainProcessor[ParamType interface{}] struct {
 
 	// AWS
 	CFInvalidator *CloudFrontInvalidator
-	S3Uploader    *S3FeedUploader
+	S3Client      *S3FeedClient
 }
 
 func (p *MainProcessor[ParamType]) ProcessChunk(
 	filesChannel chan []string,
 	errorsChannel chan ErrorCollector,
 	parametersChunk []ParamType,
-	uploader *S3FeedUploader,
+	s3Client *S3FeedClient,
 ) {
 	var (
 		invalidatePaths []string
@@ -55,9 +55,9 @@ func (p *MainProcessor[ParamType]) ProcessChunk(
 
 	// Upload files to S3
 	if len(generatedFiles) > 0 {
-		uploaderErrors := uploader.UploadFiles(generatedFiles)
-		if len(uploaderErrors) > 0 {
-			errorsCollector.CollectMany(uploaderErrors)
+		s3ClientErrors := s3Client.UploadFiles(generatedFiles)
+		if len(s3ClientErrors) > 0 {
+			errorsCollector.CollectMany(s3ClientErrors)
 		}
 	}
 
@@ -81,7 +81,7 @@ func (p *MainProcessor[ParamType]) Process(params []ParamType) error {
 	)
 
 	for _, chunk := range SplitSliceToChunks(params, p.Concurrency) {
-		go p.ProcessChunk(invalidationChannel, errorsChannel, chunk, p.S3Uploader)
+		go p.ProcessChunk(invalidationChannel, errorsChannel, chunk, p.S3Client)
 	}
 
 	for i := 0; i < p.Concurrency; i++ {

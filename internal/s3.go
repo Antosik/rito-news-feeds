@@ -20,12 +20,13 @@ func init() {
 	bucketName = os.Getenv("BUCKET_NAME")
 }
 
-type S3FeedUploader struct {
-	s3Manager *manager.Uploader
+type S3FeedClient struct {
+	s3Uploader   *manager.Uploader
+	s3Downloader *manager.Downloader
 }
 
-func (uploader S3FeedUploader) UploadFile(file FeedFile) error {
-	_, err := uploader.s3Manager.Upload(context.TODO(), &s3.PutObjectInput{
+func (client S3FeedClient) UploadFile(file FeedFile) error {
+	_, err := client.s3Uploader.Upload(context.TODO(), &s3.PutObjectInput{
 		Bucket:      aws.String(bucketName),
 		Key:         aws.String(file.Name),
 		Body:        bytes.NewReader(file.Buffer),
@@ -35,11 +36,11 @@ func (uploader S3FeedUploader) UploadFile(file FeedFile) error {
 	return err
 }
 
-func (uploader S3FeedUploader) UploadFiles(files []FeedFile) []error {
+func (client S3FeedClient) UploadFiles(files []FeedFile) []error {
 	errors := make([]error, 0, len(files))
 
 	for _, file := range files {
-		err := uploader.UploadFile(file)
+		err := client.UploadFile(file)
 		if err != nil {
 			errors = append(errors, err)
 		}
@@ -48,7 +49,25 @@ func (uploader S3FeedUploader) UploadFiles(files []FeedFile) []error {
 	return errors
 }
 
-func NewS3Uploader() *S3FeedUploader {
+func (client S3FeedClient) DownloadFile(path string) (FeedFile, error) {
+	buffer := manager.NewWriteAtBuffer([]byte{})
+
+	_, err := client.s3Downloader.Download(context.TODO(), buffer, &s3.GetObjectInput{
+		Bucket: aws.String(bucketName),
+		Key:    aws.String(path),
+	})
+	if err != nil {
+		return FeedFile{}, err
+	}
+
+	return FeedFile{
+		Name:     path,
+		MimeType: "application/json",
+		Buffer:   buffer.Bytes(),
+	}, nil
+}
+
+func NewS3Client() *S3FeedClient {
 	cfg, err := config.LoadDefaultConfig(context.TODO(), config.WithRegion("us-east-1"))
 	if err != nil {
 		log.Fatalf("unable to load SDK config, %v", err)
@@ -59,7 +78,8 @@ func NewS3Uploader() *S3FeedUploader {
 	}
 
 	s3Client := s3.NewFromConfig(cfg)
-	s3Manager := manager.NewUploader(s3Client)
+	s3Uploader := manager.NewUploader(s3Client)
+	s3Downloader := manager.NewDownloader(s3Client)
 
-	return &S3FeedUploader{s3Manager: s3Manager}
+	return &S3FeedClient{s3Uploader: s3Uploader, s3Downloader: s3Downloader}
 }

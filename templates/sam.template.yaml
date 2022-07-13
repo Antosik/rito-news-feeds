@@ -74,6 +74,7 @@ Resources:
         - Sid: S3WriteAccess
           Effect: Allow
           Action:
+          - s3:GetObject
           - s3:PutObject
           Resource: !Sub
             - "arn:aws:s3:::${BucketName}/lol/*"
@@ -111,6 +112,7 @@ Resources:
         - Sid: S3WriteAccess
           Effect: Allow
           Action:
+          - s3:GetObject
           - s3:PutObject
           Resource: !Sub
             - "arn:aws:s3:::${BucketName}/lol/*"
@@ -151,6 +153,7 @@ Resources:
         - Sid: S3WriteAccess
           Effect: Allow
           Action:
+          - s3:GetObject
           - s3:PutObject
           Resource: !Sub
             - "arn:aws:s3:::${BucketName}/lol/*"
@@ -190,6 +193,7 @@ Resources:
         - Sid: S3WriteAccess
           Effect: Allow
           Action:
+          - s3:GetObject
           - s3:PutObject
           Resource: !Sub
             - "arn:aws:s3:::${BucketName}/val/*"
@@ -227,6 +231,7 @@ Resources:
         - Sid: S3WriteAccess
           Effect: Allow
           Action:
+          - s3:GetObject
           - s3:PutObject
           Resource: !Sub
             - "arn:aws:s3:::${BucketName}/val/*"
@@ -267,6 +272,7 @@ Resources:
         - Sid: S3WriteAccess
           Effect: Allow
           Action:
+          - s3:GetObject
           - s3:PutObject
           Resource: !Sub
             - "arn:aws:s3:::${BucketName}/val/*"
@@ -306,6 +312,7 @@ Resources:
         - Sid: S3WriteAccess
           Effect: Allow
           Action:
+          - s3:GetObject
           - s3:PutObject
           Resource: !Sub
             - "arn:aws:s3:::${BucketName}/lor/*"
@@ -346,6 +353,7 @@ Resources:
         - Sid: S3WriteAccess
           Effect: Allow
           Action:
+          - s3:GetObject
           - s3:PutObject
           Resource: !Sub
             - "arn:aws:s3:::${BucketName}/lor/*"
@@ -385,6 +393,7 @@ Resources:
         - Sid: S3WriteAccess
           Effect: Allow
           Action:
+          - s3:GetObject
           - s3:PutObject
           Resource: !Sub
             - "arn:aws:s3:::${BucketName}/tft/*"
@@ -424,6 +433,7 @@ Resources:
         - Sid: S3WriteAccess
           Effect: Allow
           Action:
+          - s3:GetObject
           - s3:PutObject
           Resource: !Sub
             - "arn:aws:s3:::${BucketName}/wr/*"
@@ -461,6 +471,7 @@ Resources:
         - Sid: S3WriteAccess
           Effect: Allow
           Action:
+          - s3:GetObject
           - s3:PutObject
           Resource: !Sub
             - "arn:aws:s3:::${BucketName}/wr/*"
@@ -501,6 +512,7 @@ Resources:
         - Sid: S3WriteAccess
           Effect: Allow
           Action:
+          - s3:GetObject
           - s3:PutObject
           Resource: !Sub
             - "arn:aws:s3:::${BucketName}/wr/*"
@@ -543,6 +555,7 @@ Resources:
         - Sid: S3WriteAccess
           Effect: Allow
           Action:
+          - s3:GetObject
           - s3:PutObject
           Resource: !Sub
             - "arn:aws:s3:::${BucketName}/riotgames/*"
@@ -583,6 +596,7 @@ Resources:
         - Sid: S3WriteAccess
           Effect: Allow
           Action:
+          - s3:GetObject
           - s3:PutObject
           Resource: !Sub
             - "arn:aws:s3:::${BucketName}/riotgames/*"

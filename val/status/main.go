@@ -41,7 +41,7 @@ func init() {
 		TypeProcessor: &statusProcessor,
 
 		CFInvalidator: internal.NewCloudFrontInvalidator(),
-		S3Uploader:    internal.NewS3Uploader(),
+		S3Client:      internal.NewS3Client(),
 	}
 }
 
@@ -80,7 +80,14 @@ func (p *VALStatusProcessor) ProcessParameters(
 		}
 
 		// Check diff with existing data
-		existingEntries, err := internal.GetExistingRawEntries[val.StatusEntry](domain, fpath)
+		rawpath := fmt.Sprintf("%s.json", fpath)
+
+		existingFile, err := mainProcessor.S3Client.DownloadFile(fpath)
+		if err != nil {
+			errorsCollector.Collect(err)
+		}
+
+		existingEntries, err := internal.GetExistingRawEntries[val.StatusEntry](existingFile)
 		if err != nil {
 			errorsCollector.Collect(err)
 		}
@@ -104,8 +111,6 @@ func (p *VALStatusProcessor) ProcessParameters(
 		}
 
 		// Generate RAW file
-		rawpath := fmt.Sprintf("%s.json", fpath)
-
 		rawfile, err := internal.GenerateRawFile(entries, rawpath)
 		if err != nil {
 			errorsCollector.Collect(err)

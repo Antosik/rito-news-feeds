@@ -1,6 +1,8 @@
 package internal
 
-import "fmt"
+import (
+	"fmt"
+)
 
 func SplitSliceToChunks[T interface{}](arr []T, count int) [][]T {
 	var (
@@ -47,25 +49,30 @@ func CompareAndGetDiff[T interface{}](
 	old, new []T,
 	keyfunc func(item T) string,
 ) (diff []string, isEqual bool) {
-	om := make(map[string]uint8)
+	om := make(map[string]uint8, len(old))
 
 	for _, olditem := range old {
-		om[keyfunc(olditem)] = 0
+		om[keyfunc(olditem)] = om[keyfunc(olditem)] + 1
 	}
 
 	for _, newitem := range new {
 		key := keyfunc(newitem)
 
-		_, found := om[key]
+		val, found := om[key]
 		if found {
-			delete(om, key)
+			om[key] = val - 1
 		} else {
 			diff = append(diff, fmt.Sprintf("+ %s", key))
 		}
 	}
 
-	for key := range om {
-		diff = append(diff, fmt.Sprintf("- %s", key))
+	for key, value := range om {
+		switch {
+		case value < 0:
+			diff = append(diff, fmt.Sprintf("+ %s", key))
+		case value > 0:
+			diff = append(diff, fmt.Sprintf("- %s", key))
+		}
 	}
 
 	return diff, len(diff) == 0
