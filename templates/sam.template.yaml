@@ -532,17 +532,14 @@ Resources:
     Metadata:
       BuildMethod: makefile
     Properties:
-      Runtime: go1.x
+      Runtime: provided.al2
       Architectures:
-        - x86_64
+        - arm64
       FunctionName: !Sub
         - 'rito-news-riotgames-news-${Stage}'
         - Stage: !Ref Stage
       CodeUri: ../
-      Handler: riotgamesnews
-      Timeout: 600
-      Layers:
-        - !Ref ChromiumLayer
+      Handler: bootstrap
       Events:
         Schedule:
           Type: Schedule
@@ -573,17 +570,14 @@ Resources:
     Metadata:
       BuildMethod: makefile
     Properties:
-      Runtime: go1.x
+      Runtime: provided.al2
       Architectures:
-        - x86_64
+        - arm64
       FunctionName: !Sub
         - 'rito-news-riotgames-jobs-${Stage}'
         - Stage: !Ref Stage
       CodeUri: ../
-      Handler: riotgamesjobs
-      Timeout: 600
-      Layers:
-        - !Ref ChromiumLayer
+      Handler: bootstrap
       Events:
         Schedule:
           Type: Schedule
