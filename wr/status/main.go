@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
-	"time"
 
 	"github.com/Antosik/rito-news-feeds/internal"
 	"github.com/Antosik/rito-news/wr"
@@ -13,13 +12,16 @@ import (
 )
 
 var (
-	parameters    []statusParameters
-	parametersErr error
+	params    []statusParameters
+	paramsErr error
 
 	locales    map[string]statusLocale
 	localesErr error
 
 	domain string
+
+	statusProcessor WRStatusProcessor
+	mainProcessor   internal.MainProcessor[statusParameters]
 )
 
 const (
@@ -27,93 +29,95 @@ const (
 )
 
 func init() {
-	parameters, parametersErr = getStatusParameters()
+	params, paramsErr = getStatusParameters()
 	locales, localesErr = getStatusLocales()
 	domain = os.Getenv("DOMAIN_NAME")
+
+	statusProcessor = WRStatusProcessor{}
+	mainProcessor = internal.MainProcessor[statusParameters]{
+		Name:        "wrstatus",
+		Concurrency: channelsCount,
+
+		TypeProcessor: &statusProcessor,
+
+		CFInvalidator: internal.NewCloudFrontInvalidator(),
+		S3Uploader:    internal.NewS3Uploader(),
+	}
 }
 
-func process(
-	filesChannel chan []string,
-	errorsChannel chan internal.ErrorCollector,
-	parameters []statusParameters,
-	locales map[string]statusLocale,
-	uploader *internal.S3FeedUploader,
-) {
+// WR Status Processor (implements AbstractProcessor)
+type WRStatusProcessor struct{}
+
+func (p *WRStatusProcessor) GenerateFilePath(param statusParameters, locale string) string {
+	return internal.FormatFilePath(filepath.Join("wr", locale, fmt.Sprintf("status.%s", param.ID)))
+}
+
+func (p *WRStatusProcessor) GenerateInvalidationFilePath(param statusParameters) string {
+	return filepath.Join("/", "wr", "*", fmt.Sprintf("status.%s.*", param.ID))
+}
+
+func (p *WRStatusProcessor) GenerateAsteriskInvalidationPath() string {
+	return filepath.Join("/", "wr", "*", "status.*")
+}
+
+func (p *WRStatusProcessor) ProcessParameters(
+	param statusParameters,
+) ([]internal.FeedFile, []error) {
 	var (
-		invalidatePaths []string
 		generatedFiles  []internal.FeedFile
+		client          = wr.StatusClient{Region: param.ID}
 		errorsCollector = internal.NewErrorCollector()
 	)
 
-	for _, param := range parameters {
-		client := wr.StatusClient{Region: param.ID}
+	for _, locale := range locales {
+		fpath := p.GenerateFilePath(param, locale.Locale)
 
-		for _, locale := range locales {
-			fpath := internal.FormatFilePath(
-				filepath.Join("wr", locale.Locale, fmt.Sprintf("status.%s", param.ID)),
-			)
-
-			// Get new items
-			entries, err := client.GetItems(locale.Locale)
-			if err != nil {
-				errorsCollector.Collect(fmt.Errorf("can't get items for %s-%s: %w", param.ID, locale.Locale, err))
-				continue
-			}
-
-			// Check diff with existing data
-			existingEntries, err := internal.GetExistingRawEntries[wr.StatusEntry](domain, fpath)
-			if err != nil {
-				errorsCollector.Collect(err)
-			} else if internal.IsEqual(existingEntries, entries, compareWrStatusEntry) {
-				fmt.Printf("%s-%s doesn't require update\n", param.ID, locale.Locale)
-				continue
-			}
-
-			fmt.Printf("updating %s-%s...\n", param.ID, locale.Locale)
-
-			// Create Feed
-			feed := createWrStatusFeed(param.ID, locale, entries)
-
-			// Generate Atom, JSONFeed, RSS file
-			files, errors := internal.GenerateFeedFiles(feed, domain, fpath)
-			if len(errors) > 0 {
-				errorsCollector.CollectMany(errors)
-			}
-
-			// Generate RAW file
-			rawpath := fmt.Sprintf("%s.json", fpath)
-
-			rawfile, err := internal.GenerateRawFile(entries, rawpath)
-			if err != nil {
-				errorsCollector.Collect(err)
-			} else {
-				files = append(files, rawfile)
-			}
-
-			generatedFiles = append(generatedFiles, files...)
+		// Get new items
+		entries, err := client.GetItems(locale.Locale)
+		if err != nil {
+			errorsCollector.Collect(fmt.Errorf("can't get items for %s-%s: %w", param.ID, locale.Locale, err))
+			continue
 		}
 
-		invalidationPath := internal.FormatFilePath(
-			filepath.Join("/", "wr", "*", fmt.Sprintf("status.%s.*", param.ID)),
-		)
-		invalidatePaths = append(invalidatePaths, invalidationPath)
-	}
-
-	// Upload files to S3
-	if len(generatedFiles) > 0 {
-		uploaderErrors := uploader.UploadFiles(generatedFiles)
-		if len(uploaderErrors) > 0 {
-			errorsCollector.CollectMany(uploaderErrors)
+		// Check diff with existing data
+		existingEntries, err := internal.GetExistingRawEntries[wr.StatusEntry](domain, fpath)
+		if err != nil {
+			errorsCollector.Collect(err)
+		} else if internal.IsEqual(existingEntries, entries, compareWrStatusEntry) {
+			fmt.Printf("%s-%s doesn't require update\n", param.ID, locale.Locale)
+			continue
 		}
+
+		fmt.Printf("Updating %s-%s...\n", param.ID, locale.Locale)
+
+		// Create Feed
+		feed := createWrStatusFeed(param.ID, locale, entries)
+
+		// Generate Atom, JSONFeed, RSS file
+		files, errors := internal.GenerateFeedFiles(feed, domain, fpath)
+		if len(errors) > 0 {
+			errorsCollector.CollectMany(errors)
+		}
+
+		// Generate RAW file
+		rawpath := fmt.Sprintf("%s.json", fpath)
+
+		rawfile, err := internal.GenerateRawFile(entries, rawpath)
+		if err != nil {
+			errorsCollector.Collect(err)
+		} else {
+			files = append(files, rawfile)
+		}
+
+		generatedFiles = append(generatedFiles, files...)
 	}
 
-	errorsChannel <- *errorsCollector
-	filesChannel <- invalidatePaths
+	return generatedFiles, *errorsCollector
 }
 
 func handler() error {
-	if len(parameters) == 0 {
-		return fmt.Errorf("no parameters found: %w", parametersErr)
+	if len(params) == 0 {
+		return fmt.Errorf("no params found: %w", paramsErr)
 	}
 
 	if len(locales) == 0 {
@@ -121,47 +125,10 @@ func handler() error {
 	}
 
 	if domain == "" {
-		return fmt.Errorf("unable to load domain name")
+		return internal.ErrDomainNotFound
 	}
 
-	var (
-		errorsChannel   = make(chan internal.ErrorCollector)
-		filesChannel    = make(chan []string)
-		filesCollector  = []string{}
-		errorsCollector = internal.NewErrorCollector()
-		uploader        = internal.NewS3Uploader()
-		invalidator     = internal.NewCloudFrontInvalidator()
-	)
-
-	for _, chunk := range internal.SplitSliceToChunks(parameters, channelsCount) {
-		go process(filesChannel, errorsChannel, chunk, locales, uploader)
-	}
-
-	for i := 0; i < channelsCount; i++ {
-		errorsCollector.CollectFrom(<-errorsChannel)
-
-		filesCollector = append(filesCollector, <-filesChannel...)
-	}
-
-	fmt.Printf("Generated files count: %d\n", len(filesCollector))
-
-	// Invalidate CloudFront if new files were generated
-	if len(filesCollector) > 0 {
-		invalidationErr := invalidator.Invalidate(
-			fmt.Sprintf("wrstatus-%v", time.Now().UTC().Unix()),
-			filesCollector,
-		)
-		if invalidationErr != nil {
-			errorsCollector.Collect(invalidationErr)
-		}
-	}
-
-	if errorsCollector.Size() > 0 {
-		fmt.Printf("%d errors occured\n", errorsCollector.Size())
-		fmt.Println(errorsCollector.Error())
-	}
-
-	return nil
+	return mainProcessor.Process(params)
 }
 
 func main() {

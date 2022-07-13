@@ -5,7 +5,6 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
-	"time"
 
 	"github.com/Antosik/rito-news-feeds/internal"
 	"github.com/Antosik/rito-news/riotgames"
@@ -14,148 +13,109 @@ import (
 )
 
 var (
-	parameters    []jobsParameters
-	parametersErr error
+	params    []jobsParameters
+	paramsErr error
 
 	domain string
+
+	newsProcessor RiotGamesJobsProcessor
+	mainProcessor internal.MainProcessor[jobsParameters]
 )
 
 const (
-	articlesCount = 100
-	channelsCount = 1
+	channelsCount = 5
 )
 
 func init() {
-	parameters, parametersErr = getJobsParameters()
+	params, paramsErr = getJobsParameters()
 	domain = os.Getenv("DOMAIN_NAME")
+
+	newsProcessor = RiotGamesJobsProcessor{}
+	mainProcessor = internal.MainProcessor[jobsParameters]{
+		Name:        "riotgamesjobs",
+		Concurrency: channelsCount,
+
+		TypeProcessor: &newsProcessor,
+
+		CFInvalidator: internal.NewCloudFrontInvalidator(),
+		S3Uploader:    internal.NewS3Uploader(),
+	}
 }
 
-func process(
-	filesChannel chan []string,
-	errorsChannel chan internal.ErrorCollector,
-	parameters []jobsParameters,
-	uploader *internal.S3FeedUploader,
-) {
+// RiotGames Jobs Processor (implements AbstractProcessor)
+type RiotGamesJobsProcessor struct{}
+
+func (p *RiotGamesJobsProcessor) GenerateFilePath(param jobsParameters) string {
+	return internal.FormatFilePath(filepath.Join("riotgames", param.Locale, "jobs"))
+}
+
+func (p *RiotGamesJobsProcessor) GenerateInvalidationFilePath(param jobsParameters) string {
+	return fmt.Sprintf("/%s.*", p.GenerateFilePath(param))
+}
+
+func (p *RiotGamesJobsProcessor) GenerateAsteriskInvalidationPath() string {
+	return filepath.Join("/", "riotgames", "*", "jobs.*")
+}
+
+func (p *RiotGamesJobsProcessor) ProcessParameters(
+	param jobsParameters,
+) ([]internal.FeedFile, []error) {
 	var (
-		invalidatePaths []string
-		generatedFiles  []internal.FeedFile
+		client          = riotgames.JobsClient{Locale: strings.ToLower(param.Locale)}
+		fpath           = p.GenerateFilePath(param)
 		errorsCollector = internal.NewErrorCollector()
 	)
 
-	for _, param := range parameters {
-		fmt.Printf("start processing %s\n", param.Locale)
-
-		var (
-			client = riotgames.JobsClient{Locale: strings.ToLower(param.Locale)}
-			fpath  = internal.FormatFilePath(filepath.Join("riotgames", param.Locale, "jobs"))
-		)
-
-		// Get new items
-		entries, err := client.GetItems()
-		if err != nil {
-			errorsCollector.Collect(fmt.Errorf("can't get items for %s: %w", param.Locale, err))
-			continue
-		}
-
-		// Check diff with existing data
-		existingEntries, err := internal.GetExistingRawEntries[riotgames.JobsEntry](domain, fpath)
-		if err != nil {
-			errorsCollector.Collect(err)
-		} else if internal.IsEqual(existingEntries, entries, compareRiotGamesJobsEntry) {
-			fmt.Printf("%s doesn't require update\n", param.Locale)
-			continue
-		}
-
-		fmt.Printf("updating %s...\n", param.Locale)
-
-		// Create Feed
-		feed := createRiotGamesJobsFeed(param, entries)
-
-		// Generate Atom, JSONFeed, RSS file
-		files, errors := internal.GenerateFeedFiles(feed, domain, fpath)
-		if len(errors) > 0 {
-			errorsCollector.CollectMany(errors)
-		}
-
-		// Generate RAW file
-		rawpath := fmt.Sprintf("%s.json", fpath)
-
-		rawfile, err := internal.GenerateRawFile(entries, rawpath)
-		if err != nil {
-			errorsCollector.Collect(err)
-		} else {
-			files = append(files, rawfile)
-		}
-
-		invalidatePaths = append(invalidatePaths, fmt.Sprintf("/%s.*", fpath))
-		generatedFiles = append(generatedFiles, files...)
+	// Get new items
+	entries, err := client.GetItems()
+	if err != nil {
+		errorsCollector.Collect(fmt.Errorf("can't get items for %s: %w", param.Locale, err))
+		return nil, *errorsCollector
 	}
 
-	// Upload files to S3
-	if len(generatedFiles) > 0 {
-		uploaderErrors := uploader.UploadFiles(generatedFiles)
-		if len(uploaderErrors) > 0 {
-			errorsCollector.CollectMany(uploaderErrors)
-		}
+	// Check diff with existing data
+	existingEntries, err := internal.GetExistingRawEntries[riotgames.JobsEntry](domain, fpath)
+	if err != nil {
+		errorsCollector.Collect(err)
+	} else if internal.IsEqual(existingEntries, entries, compareRiotGamesJobsEntry) {
+		fmt.Printf("%s doesn't require update\n", param.Locale)
+		return nil, nil
 	}
 
-	if len(invalidatePaths) > len(parameters)/3 {
-		invalidatePaths = []string{
-			internal.FormatFilePath(filepath.Join("/", "riotgames", "*", "jobs.*")),
-		}
+	fmt.Printf("Updating %s...\n", param.Locale)
+
+	// Create Feed
+	feed := createRiotGamesJobsFeed(param, entries)
+
+	// Generate Atom, JSONFeed, RSS file
+	files, errors := internal.GenerateFeedFiles(feed, domain, fpath)
+	if len(errors) > 0 {
+		errorsCollector.CollectMany(errors)
 	}
 
-	errorsChannel <- *errorsCollector
-	filesChannel <- invalidatePaths
+	// Generate RAW file
+	rawpath := fmt.Sprintf("%s.json", fpath)
+
+	rawfile, err := internal.GenerateRawFile(entries, rawpath)
+	if err != nil {
+		errorsCollector.Collect(err)
+	} else {
+		files = append(files, rawfile)
+	}
+
+	return files, *errorsCollector
 }
 
 func handler() error {
-	if len(parameters) == 0 {
-		return fmt.Errorf("no parameters found: %w", parametersErr)
+	if len(params) == 0 {
+		return fmt.Errorf("no params found: %w", paramsErr)
 	}
 
 	if domain == "" {
-		return fmt.Errorf("unable to load domain name")
+		return internal.ErrDomainNotFound
 	}
 
-	var (
-		errorsChannel   = make(chan internal.ErrorCollector)
-		filesChannel    = make(chan []string)
-		filesCollector  = []string{}
-		errorsCollector = internal.NewErrorCollector()
-		uploader        = internal.NewS3Uploader()
-		invalidator     = internal.NewCloudFrontInvalidator()
-	)
-
-	for _, chunk := range internal.SplitSliceToChunks(parameters, channelsCount) {
-		go process(filesChannel, errorsChannel, chunk, uploader)
-	}
-
-	for i := 0; i < channelsCount; i++ {
-		errorsCollector.CollectFrom(<-errorsChannel)
-
-		filesCollector = append(filesCollector, <-filesChannel...)
-	}
-
-	fmt.Printf("Generated files count: %d\n", len(filesCollector))
-
-	// Invalidate CloudFront if new files were generated
-	if len(filesCollector) > 0 {
-		invalidationErr := invalidator.Invalidate(
-			fmt.Sprintf("riotgamesjobs-%v", time.Now().UTC().Unix()),
-			filesCollector,
-		)
-		if invalidationErr != nil {
-			errorsCollector.Collect(invalidationErr)
-		}
-	}
-
-	if errorsCollector.Size() > 0 {
-		fmt.Printf("%d errors occured\n", errorsCollector.Size())
-		fmt.Println(errorsCollector.Error())
-	}
-
-	return nil
+	return mainProcessor.Process(params)
 }
 
 func main() {
