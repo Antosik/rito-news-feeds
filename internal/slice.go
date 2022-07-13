@@ -49,7 +49,7 @@ func CompareAndGetDiff[T interface{}](
 	old, new []T,
 	keyfunc func(item T) string,
 ) (diff []string, isEqual bool) {
-	om := make(map[string]uint8, len(old))
+	om := make(map[string]int8, len(old))
 
 	for _, olditem := range old {
 		om[keyfunc(olditem)] = om[keyfunc(olditem)] + 1
