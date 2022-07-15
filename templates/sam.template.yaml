@@ -48,6 +48,44 @@ Resources:
         - go1.x
   #endregion Chrome layer
 
+  #region RitoNews Lambda role
+  RitoNewsLambdaRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - lambda.amazonaws.com
+            Action:
+              - 'sts:AssumeRole'
+      Path: /
+      Policies:
+        - PolicyName: S3BuckerGetPutAccess
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action:
+                - s3:GetObject
+                - s3:PutObject
+                Resource: !Sub
+                  - "arn:aws:s3:::${BucketName}/*"
+                  - BucketName: !Ref BucketName
+        - PolicyName: CFInvalidationAccess
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action:
+                - cloudfront:CreateInvalidation
+                Resource: !Sub
+                  - "arn:aws:cloudfront::${AWS::AccountId}:distribution/${DistributionId}"
+                  - DistributionId: !Ref DistributionId
+  #endregion RitoNews Lambda role
+
   #region League of Legends
   LeagueOfLegendsStatusChecker:
     Type: AWS::Serverless::Function
@@ -62,6 +100,7 @@ Resources:
         - Stage: !Ref Stage
       CodeUri: ../
       Handler: bootstrap
+      Role: !GetAtt RitoNewsLambdaRole.Arn
       Events:
         Schedule:
           Type: Schedule
@@ -69,24 +108,7 @@ Resources:
             Schedule: !Sub
               - 'rate(${TTL} minutes)'
               - TTL: !Ref TTL
-      Policies:
-      - Statement:
-        - Sid: S3WriteAccess
-          Effect: Allow
-          Action:
-          - s3:GetObject
-          - s3:PutObject
-          Resource: !Sub
-            - "arn:aws:s3:::${BucketName}/lol/*"
-            - BucketName: !Ref BucketName
-        - Sid: CloudFrontInvalidationCreationAccess
-          Effect: Allow
-          Action:
-          - cloudfront:CreateInvalidation
-          Resource: !Sub
-            - "arn:aws:cloudfront::${AWS::AccountId}:distribution/${DistributionId}"
-            - DistributionId: !Ref DistributionId
-  
+
   LeagueOfLegendsNewsChecker:
     Type: AWS::Serverless::Function
     Metadata:
@@ -100,6 +122,7 @@ Resources:
         - Stage: !Ref Stage
       CodeUri: ../
       Handler: bootstrap
+      Role: !GetAtt RitoNewsLambdaRole.Arn
       Events:
         Schedule:
           Type: Schedule
@@ -107,23 +130,6 @@ Resources:
             Schedule: !Sub
               - 'rate(${TTL} minutes)'
               - TTL: !Ref TTL
-      Policies:
-      - Statement:
-        - Sid: S3WriteAccess
-          Effect: Allow
-          Action:
-          - s3:GetObject
-          - s3:PutObject
-          Resource: !Sub
-            - "arn:aws:s3:::${BucketName}/lol/*"
-            - BucketName: !Ref BucketName
-        - Sid: CloudFrontInvalidationCreationAccess
-          Effect: Allow
-          Action:
-          - cloudfront:CreateInvalidation
-          Resource: !Sub
-            - "arn:aws:cloudfront::${AWS::AccountId}:distribution/${DistributionId}"
-            - DistributionId: !Ref DistributionId
   
   LeagueOfLegendsEsportsChecker:
     Type: AWS::Serverless::Function
@@ -138,6 +144,7 @@ Resources:
         - Stage: !Ref Stage
       CodeUri: ../
       Handler: lolesports
+      Role: !GetAtt RitoNewsLambdaRole.Arn
       Timeout: 600
       Layers:
         - !Ref ChromiumLayer
@@ -148,23 +155,6 @@ Resources:
             Schedule: !Sub
               - 'rate(${TTL} minutes)'
               - TTL: !Ref TTL
-      Policies:
-      - Statement:
-        - Sid: S3WriteAccess
-          Effect: Allow
-          Action:
-          - s3:GetObject
-          - s3:PutObject
-          Resource: !Sub
-            - "arn:aws:s3:::${BucketName}/lol/*"
-            - BucketName: !Ref BucketName
-        - Sid: CloudFrontInvalidationCreationAccess
-          Effect: Allow
-          Action:
-          - cloudfront:CreateInvalidation
-          Resource: !Sub
-            - "arn:aws:cloudfront::${AWS::AccountId}:distribution/${DistributionId}"
-            - DistributionId: !Ref DistributionId
   #endregion League of Legends
 
   #region VALORANT
@@ -181,6 +171,7 @@ Resources:
         - Stage: !Ref Stage
       CodeUri: ../
       Handler: bootstrap
+      Role: !GetAtt RitoNewsLambdaRole.Arn
       Events:
         Schedule:
           Type: Schedule
@@ -188,23 +179,6 @@ Resources:
             Schedule: !Sub
               - 'rate(${TTL} minutes)'
               - TTL: !Ref TTL
-      Policies:
-      - Statement:
-        - Sid: S3WriteAccess
-          Effect: Allow
-          Action:
-          - s3:GetObject
-          - s3:PutObject
-          Resource: !Sub
-            - "arn:aws:s3:::${BucketName}/val/*"
-            - BucketName: !Ref BucketName
-        - Sid: CloudFrontInvalidationCreationAccess
-          Effect: Allow
-          Action:
-          - cloudfront:CreateInvalidation
-          Resource: !Sub
-            - "arn:aws:cloudfront::${AWS::AccountId}:distribution/${DistributionId}"
-            - DistributionId: !Ref DistributionId
   
   VALORANTNewsChecker:
     Type: AWS::Serverless::Function
@@ -219,6 +193,7 @@ Resources:
         - Stage: !Ref Stage
       CodeUri: ../
       Handler: bootstrap
+      Role: !GetAtt RitoNewsLambdaRole.Arn
       Events:
         Schedule:
           Type: Schedule
@@ -226,23 +201,6 @@ Resources:
             Schedule: !Sub
               - 'rate(${TTL} minutes)'
               - TTL: !Ref TTL
-      Policies:
-      - Statement:
-        - Sid: S3WriteAccess
-          Effect: Allow
-          Action:
-          - s3:GetObject
-          - s3:PutObject
-          Resource: !Sub
-            - "arn:aws:s3:::${BucketName}/val/*"
-            - BucketName: !Ref BucketName
-        - Sid: CloudFrontInvalidationCreationAccess
-          Effect: Allow
-          Action:
-          - cloudfront:CreateInvalidation
-          Resource: !Sub
-            - "arn:aws:cloudfront::${AWS::AccountId}:distribution/${DistributionId}"
-            - DistributionId: !Ref DistributionId
   
   VALORANTEsportsChecker:
     Type: AWS::Serverless::Function
@@ -257,6 +215,7 @@ Resources:
         - Stage: !Ref Stage
       CodeUri: ../
       Handler: valesports
+      Role: !GetAtt RitoNewsLambdaRole.Arn
       Timeout: 600
       Layers:
         - !Ref ChromiumLayer
@@ -267,23 +226,6 @@ Resources:
             Schedule: !Sub
               - 'rate(${TTL} minutes)'
               - TTL: !Ref TTL
-      Policies:
-      - Statement:
-        - Sid: S3WriteAccess
-          Effect: Allow
-          Action:
-          - s3:GetObject
-          - s3:PutObject
-          Resource: !Sub
-            - "arn:aws:s3:::${BucketName}/val/*"
-            - BucketName: !Ref BucketName
-        - Sid: CloudFrontInvalidationCreationAccess
-          Effect: Allow
-          Action:
-          - cloudfront:CreateInvalidation
-          Resource: !Sub
-            - "arn:aws:cloudfront::${AWS::AccountId}:distribution/${DistributionId}"
-            - DistributionId: !Ref DistributionId
   #endregion VALORANT
 
   #region Legends of Runeterra
@@ -300,6 +242,7 @@ Resources:
         - Stage: !Ref Stage
       CodeUri: ../
       Handler: bootstrap
+      Role: !GetAtt RitoNewsLambdaRole.Arn
       Events:
         Schedule:
           Type: Schedule
@@ -307,23 +250,6 @@ Resources:
             Schedule: !Sub
               - 'rate(${TTL} minutes)'
               - TTL: !Ref TTL
-      Policies:
-      - Statement:
-        - Sid: S3WriteAccess
-          Effect: Allow
-          Action:
-          - s3:GetObject
-          - s3:PutObject
-          Resource: !Sub
-            - "arn:aws:s3:::${BucketName}/lor/*"
-            - BucketName: !Ref BucketName
-        - Sid: CloudFrontInvalidationCreationAccess
-          Effect: Allow
-          Action:
-          - cloudfront:CreateInvalidation
-          Resource: !Sub
-            - "arn:aws:cloudfront::${AWS::AccountId}:distribution/${DistributionId}"
-            - DistributionId: !Ref DistributionId
   
   LegendsOfRuneterraNewsChecker:
     Type: AWS::Serverless::Function
@@ -338,6 +264,7 @@ Resources:
         - Stage: !Ref Stage
       CodeUri: ../
       Handler: lornews
+      Role: !GetAtt RitoNewsLambdaRole.Arn
       Timeout: 600
       Layers:
         - !Ref ChromiumLayer
@@ -348,23 +275,6 @@ Resources:
             Schedule: !Sub
               - 'rate(${TTL} minutes)'
               - TTL: !Ref TTL
-      Policies:
-      - Statement:
-        - Sid: S3WriteAccess
-          Effect: Allow
-          Action:
-          - s3:GetObject
-          - s3:PutObject
-          Resource: !Sub
-            - "arn:aws:s3:::${BucketName}/lor/*"
-            - BucketName: !Ref BucketName
-        - Sid: CloudFrontInvalidationCreationAccess
-          Effect: Allow
-          Action:
-          - cloudfront:CreateInvalidation
-          Resource: !Sub
-            - "arn:aws:cloudfront::${AWS::AccountId}:distribution/${DistributionId}"
-            - DistributionId: !Ref DistributionId
   #endregion Legends of Runeterra
 
   #region Teamfight Tactics
@@ -381,6 +291,7 @@ Resources:
         - Stage: !Ref Stage
       CodeUri: ../
       Handler: bootstrap
+      Role: !GetAtt RitoNewsLambdaRole.Arn
       Events:
         Schedule:
           Type: Schedule
@@ -388,23 +299,6 @@ Resources:
             Schedule: !Sub
               - 'rate(${TTL} minutes)'
               - TTL: !Ref TTL
-      Policies:
-      - Statement:
-        - Sid: S3WriteAccess
-          Effect: Allow
-          Action:
-          - s3:GetObject
-          - s3:PutObject
-          Resource: !Sub
-            - "arn:aws:s3:::${BucketName}/tft/*"
-            - BucketName: !Ref BucketName
-        - Sid: CloudFrontInvalidationCreationAccess
-          Effect: Allow
-          Action:
-          - cloudfront:CreateInvalidation
-          Resource: !Sub
-            - "arn:aws:cloudfront::${AWS::AccountId}:distribution/${DistributionId}"
-            - DistributionId: !Ref DistributionId
   #endregion Teamfight Tactics
 
   #region Wild Rift
@@ -421,6 +315,7 @@ Resources:
         - Stage: !Ref Stage
       CodeUri: ../
       Handler: bootstrap
+      Role: !GetAtt RitoNewsLambdaRole.Arn
       Events:
         Schedule:
           Type: Schedule
@@ -428,23 +323,6 @@ Resources:
             Schedule: !Sub
               - 'rate(${TTL} minutes)'
               - TTL: !Ref TTL
-      Policies:
-      - Statement:
-        - Sid: S3WriteAccess
-          Effect: Allow
-          Action:
-          - s3:GetObject
-          - s3:PutObject
-          Resource: !Sub
-            - "arn:aws:s3:::${BucketName}/wr/*"
-            - BucketName: !Ref BucketName
-        - Sid: CloudFrontInvalidationCreationAccess
-          Effect: Allow
-          Action:
-          - cloudfront:CreateInvalidation
-          Resource: !Sub
-            - "arn:aws:cloudfront::${AWS::AccountId}:distribution/${DistributionId}"
-            - DistributionId: !Ref DistributionId
 
   WildRiftNewsChecker:
     Type: AWS::Serverless::Function
@@ -459,6 +337,7 @@ Resources:
         - Stage: !Ref Stage
       CodeUri: ../
       Handler: bootstrap
+      Role: !GetAtt RitoNewsLambdaRole.Arn
       Events:
         Schedule:
           Type: Schedule
@@ -466,23 +345,6 @@ Resources:
             Schedule: !Sub
               - 'rate(${TTL} minutes)'
               - TTL: !Ref TTL
-      Policies:
-      - Statement:
-        - Sid: S3WriteAccess
-          Effect: Allow
-          Action:
-          - s3:GetObject
-          - s3:PutObject
-          Resource: !Sub
-            - "arn:aws:s3:::${BucketName}/wr/*"
-            - BucketName: !Ref BucketName
-        - Sid: CloudFrontInvalidationCreationAccess
-          Effect: Allow
-          Action:
-          - cloudfront:CreateInvalidation
-          Resource: !Sub
-            - "arn:aws:cloudfront::${AWS::AccountId}:distribution/${DistributionId}"
-            - DistributionId: !Ref DistributionId
 
   WildRiftEsportsChecker:
     Type: AWS::Serverless::Function
@@ -497,6 +359,7 @@ Resources:
         - Stage: !Ref Stage
       CodeUri: ../
       Handler: wresports
+      Role: !GetAtt RitoNewsLambdaRole.Arn
       Timeout: 600
       Layers:
         - !Ref ChromiumLayer
@@ -507,23 +370,6 @@ Resources:
             Schedule: !Sub
               - 'rate(${TTL} minutes)'
               - TTL: !Ref TTL
-      Policies:
-      - Statement:
-        - Sid: S3WriteAccess
-          Effect: Allow
-          Action:
-          - s3:GetObject
-          - s3:PutObject
-          Resource: !Sub
-            - "arn:aws:s3:::${BucketName}/wr/*"
-            - BucketName: !Ref BucketName
-        - Sid: CloudFrontInvalidationCreationAccess
-          Effect: Allow
-          Action:
-          - cloudfront:CreateInvalidation
-          Resource: !Sub
-            - "arn:aws:cloudfront::${AWS::AccountId}:distribution/${DistributionId}"
-            - DistributionId: !Ref DistributionId
   #endregion Wild Rift
 
   #region Riot Games
@@ -540,6 +386,7 @@ Resources:
         - Stage: !Ref Stage
       CodeUri: ../
       Handler: bootstrap
+      Role: !GetAtt RitoNewsLambdaRole.Arn
       Events:
         Schedule:
           Type: Schedule
@@ -547,23 +394,6 @@ Resources:
             Schedule: !Sub
               - 'rate(${TTL} minutes)'
               - TTL: !Ref TTL
-      Policies:
-      - Statement:
-        - Sid: S3WriteAccess
-          Effect: Allow
-          Action:
-          - s3:GetObject
-          - s3:PutObject
-          Resource: !Sub
-            - "arn:aws:s3:::${BucketName}/riotgames/*"
-            - BucketName: !Ref BucketName
-        - Sid: CloudFrontInvalidationCreationAccess
-          Effect: Allow
-          Action:
-          - cloudfront:CreateInvalidation
-          Resource: !Sub
-            - "arn:aws:cloudfront::${AWS::AccountId}:distribution/${DistributionId}"
-            - DistributionId: !Ref DistributionId
 
   RiotGamesJobsChecker:
     Type: AWS::Serverless::Function
@@ -578,6 +408,7 @@ Resources:
         - Stage: !Ref Stage
       CodeUri: ../
       Handler: bootstrap
+      Role: !GetAtt RitoNewsLambdaRole.Arn
       Events:
         Schedule:
           Type: Schedule
@@ -585,21 +416,4 @@ Resources:
             Schedule: !Sub
               - 'rate(${TTL} minutes)'
               - TTL: !Ref TTL
-      Policies:
-      - Statement:
-        - Sid: S3WriteAccess
-          Effect: Allow
-          Action:
-          - s3:GetObject
-          - s3:PutObject
-          Resource: !Sub
-            - "arn:aws:s3:::${BucketName}/riotgames/*"
-            - BucketName: !Ref BucketName
-        - Sid: CloudFrontInvalidationCreationAccess
-          Effect: Allow
-          Action:
-          - cloudfront:CreateInvalidation
-          Resource: !Sub
-            - "arn:aws:cloudfront::${AWS::AccountId}:distribution/${DistributionId}"
-            - DistributionId: !Ref DistributionId
   #endregion Riot Games
