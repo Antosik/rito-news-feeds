@@ -3,6 +3,7 @@ package internal
 import (
 	"bytes"
 	"context"
+	"fmt"
 	"log"
 	"os"
 
@@ -42,7 +43,7 @@ func (client S3FeedClient) UploadFiles(files []FeedFile) []error {
 	for _, file := range files {
 		err := client.UploadFile(file)
 		if err != nil {
-			errors = append(errors, err)
+			errors = append(errors, fmt.Errorf("can't upload file %s: %w", file.Name, err))
 		}
 	}
 
@@ -57,7 +58,7 @@ func (client S3FeedClient) DownloadFile(path string) (FeedFile, error) {
 		Key:    aws.String(path),
 	})
 	if err != nil {
-		return FeedFile{}, err
+		return FeedFile{}, fmt.Errorf("can't download file %s: %w", path, err)
 	}
 
 	return FeedFile{

@@ -82,7 +82,7 @@ func (p *LoRStatusProcessor) ProcessParameters(
 		// Check diff with existing data
 		rawpath := fmt.Sprintf("%s.json", fpath)
 
-		existingFile, err := mainProcessor.S3Client.DownloadFile(fpath)
+		existingFile, err := mainProcessor.S3Client.DownloadFile(rawpath)
 		if err != nil {
 			errorsCollector.Collect(err)
 		}
