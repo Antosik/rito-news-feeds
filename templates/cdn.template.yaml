@@ -18,6 +18,16 @@ Resources:
     Type: AWS::S3::Bucket
     Properties:
       BucketName: !Ref BucketName
+      CorsConfiguration:
+        CorsRules:
+          -
+            AllowedOrigins: 
+              - "*"
+            AllowedMethods: 
+              - GET
+              - HEAD
+            AllowedHeaders: 
+              - "*"
       Tags:
         - Key: Product
           Value: rito-news
@@ -70,6 +80,10 @@ Resources:
             - HEAD
           ForwardedValues:
             QueryString: True
+            Headers:
+              - "Origin"
+              - "Access-Control-Request-Headers"
+              - "Access-Control-Request-Method"
           TargetOriginId: !Sub "S3-origin-${s3WebSiteBucket}"
           ViewerProtocolPolicy: redirect-to-https
         DefaultRootObject: index.html
