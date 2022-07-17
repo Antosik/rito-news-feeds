@@ -217,6 +217,7 @@ Resources:
       Handler: valesports
       Role: !GetAtt RitoNewsLambdaRole.Arn
       Timeout: 600
+      MemorySize: 624
       Layers:
         - !Ref ChromiumLayer
       Events:
@@ -266,6 +267,7 @@ Resources:
       Handler: lornews
       Role: !GetAtt RitoNewsLambdaRole.Arn
       Timeout: 600
+      MemorySize: 624
       Layers:
         - !Ref ChromiumLayer
       Events:
