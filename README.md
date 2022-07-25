@@ -1,5 +1,5 @@
 # rito-news-feeds
-[![Build status](https://img.shields.io/github/workflow/status/Antosik/rito-news-feeds/lint)](https://github.com/Antosik/rito-news/actions/workflows/lint.yml)
+[![Build status](https://img.shields.io/github/workflow/status/Antosik/rito-news-feeds/lint)](https://github.com/Antosik/rito-news-feeds/actions/workflows/lint.yml)
 
 ## Description
 This service generates an Atom, JSONFeed, RSS and raw JSON data from various official news sources about League of Legends, VALORANT, Legends of Runeterra, Teamfight Tactics, Wild Rift and Riot Games.
