@@ -76,12 +76,13 @@ Resources:
             - GET
             - HEAD
             - OPTIONS
-          CachePolicyId: 658327ea-f89d-4fab-a63d-7e88639e58f6
+          CachePolicyId: 658327ea-f89d-4fab-a63d-7e88639e58f6 # https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/using-managed-cache-policies.html
           CachedMethods:
             - GET
             - HEAD
           Compress: True
-          OriginRequestPolicyId: 88a5eaf4-2fd4-4709-b370-b4c650ea3fcf
+          OriginRequestPolicyId: 88a5eaf4-2fd4-4709-b370-b4c650ea3fcf # https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/using-managed-origin-request-policies.html
+          ResponseHeadersPolicyId: 60669652-455b-4ae9-85a4-c4c02393f86c # https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/using-managed-response-headers-policies.html
           TargetOriginId: !Sub "S3-origin-${s3WebSiteBucket}"
           ViewerProtocolPolicy: redirect-to-https
         DefaultRootObject: index.html
