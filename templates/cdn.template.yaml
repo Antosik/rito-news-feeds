@@ -75,15 +75,13 @@ Resources:
           AllowedMethods:
             - GET
             - HEAD
+            - OPTIONS
+          CachePolicyId: 658327ea-f89d-4fab-a63d-7e88639e58f6
           CachedMethods:
             - GET
             - HEAD
-          ForwardedValues:
-            QueryString: True
-            Headers:
-              - "Origin"
-              - "Access-Control-Request-Headers"
-              - "Access-Control-Request-Method"
+          Compress: True
+          OriginRequestPolicyId: 88a5eaf4-2fd4-4709-b370-b4c650ea3fcf
           TargetOriginId: !Sub "S3-origin-${s3WebSiteBucket}"
           ViewerProtocolPolicy: redirect-to-https
         DefaultRootObject: index.html
@@ -98,7 +96,7 @@ Resources:
         PriceClass: PriceClass_All
         ViewerCertificate:
           AcmCertificateArn: !Ref acmWebSiteCertificateSSL
-          MinimumProtocolVersion: TLSv1.2_2018
+          MinimumProtocolVersion: TLSv1.2_2021
           SslSupportMethod: sni-only
       Tags:
         - Key: Product
