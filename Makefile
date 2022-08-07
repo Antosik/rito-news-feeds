@@ -1,4 +1,4 @@
-.PHONY: build
+include ${STAGE}.env
 
 #region SAM
 build:
@@ -7,14 +7,16 @@ build:
 		--parameter-overrides \
 			ParameterKey=DomainName,ParameterValue=${DOMAIN_NAME} \
 			ParameterKey=BucketName,ParameterValue=${BUCKET_NAME} \
-			ParameterKey=DistributionId,ParameterValue=${DISTRIBUTION_ID}
+			ParameterKey=DistributionId,ParameterValue=${DISTRIBUTION_ID} \
+			ParameterKey=Stage,ParameterValue=${STAGE}
 
 local:
 	sam local invoke "${FUNCTION}" \
 		--parameter-overrides \
 			ParameterKey=DomainName,ParameterValue=${DOMAIN_NAME} \
 			ParameterKey=BucketName,ParameterValue=${BUCKET_NAME} \
-			ParameterKey=DistributionId,ParameterValue=${DISTRIBUTION_ID}
+			ParameterKey=DistributionId,ParameterValue=${DISTRIBUTION_ID} \
+			ParameterKey=Stage,ParameterValue=${STAGE}
 
 validate:
 	sam validate \
@@ -22,30 +24,38 @@ validate:
 
 deploy:
 	sam deploy \
-		--stack-name rito-news-feeds \
+		--stack-name rito-news-feeds-${STAGE} \
 		--config-file ./templates/samconfig.toml \
+		--config-env ${STAGE} \
 		--parameter-overrides \
 			ParameterKey=DomainName,ParameterValue=${DOMAIN_NAME} \
 			ParameterKey=BucketName,ParameterValue=${BUCKET_NAME} \
-			ParameterKey=DistributionId,ParameterValue=${DISTRIBUTION_ID}
+			ParameterKey=DistributionId,ParameterValue=${DISTRIBUTION_ID} \
+			ParameterKey=Stage,ParameterValue=${STAGE}
 #endregion SAM
 
 #region CDN
 cdn-create:
 	aws cloudformation create-stack \
-		--stack-name rito-news-cdn-stack \
+		--stack-name rito-news-cdn-stack-${STAGE} \
 		--template-body file://templates/cdn.template.yaml \
 		--region us-east-1 \
 		--capabilities CAPABILITY_NAMED_IAM \
-		--parameters ParameterKey=DomainName,ParameterValue=${DOMAIN_NAME} ParameterKey=BucketName,ParameterValue=${BUCKET_NAME}
+		--parameters \
+			ParameterKey=DomainName,ParameterValue=${DOMAIN_NAME} \
+			ParameterKey=BucketName,ParameterValue=${BUCKET_NAME} \
+			ParameterKey=Stage,ParameterValue=${STAGE}
 
 cdn-update:
 	aws cloudformation update-stack \
-		--stack-name rito-news-cdn-stack \
+		--stack-name rito-news-cdn-stack-${STAGE} \
 		--template-body file://templates/cdn.template.yaml \
 		--region us-east-1 \
 		--capabilities CAPABILITY_NAMED_IAM \
-		--parameters ParameterKey=DomainName,ParameterValue=${DOMAIN_NAME} ParameterKey=BucketName,ParameterValue=${BUCKET_NAME}
+		--parameters \
+			ParameterKey=DomainName,ParameterValue=${DOMAIN_NAME} \
+		 	ParameterKey=BucketName,ParameterValue=${BUCKET_NAME} \
+			ParameterKey=Stage,ParameterValue=${STAGE} 
 #endregion CDN
 
 #region Build: League of Legends
