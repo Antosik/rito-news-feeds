@@ -71,6 +71,24 @@ Resources:
       CloudFrontOriginAccessIdentityConfig:
         Comment: !Sub 'CloudFront Origin access identity for ${DomainName}'
 
+  cfCachePolicy:
+    Type: AWS::CloudFront::CachePolicy
+    Properties:
+      CachePolicyConfig:
+        Name: RitoNewsFeedsCachePolicy
+        MinTTL: 1
+        DefaultTTL: 900
+        MaxTTL: 1800
+        ParametersInCacheKeyAndForwardedToOrigin:
+          CookiesConfig:
+            CookieBehavior: none
+          EnableAcceptEncodingBrotli: true
+          EnableAcceptEncodingGzip: true
+          HeadersConfig:
+            HeaderBehavior: none
+          QueryStringsConfig:
+            QueryStringBehavior: none
+
   cfDistribution:
     Type: AWS::CloudFront::Distribution
     Properties:
@@ -82,7 +100,7 @@ Resources:
             - GET
             - HEAD
             - OPTIONS
-          CachePolicyId: 658327ea-f89d-4fab-a63d-7e88639e58f6 # https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/using-managed-cache-policies.html
+          CachePolicyId: !Ref cfCachePolicy
           CachedMethods:
             - GET
             - HEAD
