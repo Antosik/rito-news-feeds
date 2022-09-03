@@ -77,8 +77,8 @@ Resources:
       CachePolicyConfig:
         Name: RitoNewsFeedsCachePolicy
         MinTTL: 1
-        DefaultTTL: 900
-        MaxTTL: 1800
+        DefaultTTL: 600
+        MaxTTL: 900
         ParametersInCacheKeyAndForwardedToOrigin:
           CookiesConfig:
             CookieBehavior: none
