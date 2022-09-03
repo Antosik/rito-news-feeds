@@ -37,8 +37,7 @@ func init() {
 
 		TypeProcessor: &newsProcessor,
 
-		CFInvalidator: internal.NewCloudFrontInvalidator(),
-		S3Client:      internal.NewS3Client(),
+		S3Client: internal.NewS3Client(),
 	}
 }
 
@@ -49,12 +48,8 @@ func (p *RiotGamesJobsProcessor) GenerateFilePath(param jobsParameters) string {
 	return internal.FormatFilePath(filepath.Join("riotgames", param.Locale, "jobs"))
 }
 
-func (p *RiotGamesJobsProcessor) GenerateInvalidationFilePath(param jobsParameters) string {
+func (p *RiotGamesJobsProcessor) GenerateAbstractFilePath(param jobsParameters) string {
 	return fmt.Sprintf("/%s.*", p.GenerateFilePath(param))
-}
-
-func (p *RiotGamesJobsProcessor) GenerateAsteriskInvalidationPath() string {
-	return filepath.Join("/", "riotgames", "*", "jobs.*")
 }
 
 func (p *RiotGamesJobsProcessor) ProcessParameters(

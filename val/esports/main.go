@@ -38,8 +38,7 @@ func init() {
 
 		TypeProcessor: &esportsProcessor,
 
-		CFInvalidator: internal.NewCloudFrontInvalidator(),
-		S3Client:      internal.NewS3Client(),
+		S3Client: internal.NewS3Client(),
 	}
 }
 
@@ -49,12 +48,9 @@ type VALEsportsProcessor struct{}
 func (p *VALEsportsProcessor) GenerateFilePath(param esportsParameters) string {
 	return internal.FormatFilePath(filepath.Join("val", param.Locale, "esports"))
 }
-func (p *VALEsportsProcessor) GenerateInvalidationFilePath(param esportsParameters) string {
-	return fmt.Sprintf("/%s.*", p.GenerateFilePath(param))
-}
 
-func (p *VALEsportsProcessor) GenerateAsteriskInvalidationPath() string {
-	return filepath.Join("/", "val", "*", "esports.*")
+func (p *VALEsportsProcessor) GenerateAbstractFilePath(param esportsParameters) string {
+	return fmt.Sprintf("/%s.*", p.GenerateFilePath(param))
 }
 
 func (p *VALEsportsProcessor) ProcessParameters(

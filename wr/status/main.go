@@ -40,8 +40,7 @@ func init() {
 
 		TypeProcessor: &statusProcessor,
 
-		CFInvalidator: internal.NewCloudFrontInvalidator(),
-		S3Client:      internal.NewS3Client(),
+		S3Client: internal.NewS3Client(),
 	}
 }
 
@@ -52,12 +51,8 @@ func (p *WRStatusProcessor) GenerateFilePath(param statusParameters, locale stri
 	return internal.FormatFilePath(filepath.Join("wr", locale, fmt.Sprintf("status.%s", param.ID)))
 }
 
-func (p *WRStatusProcessor) GenerateInvalidationFilePath(param statusParameters) string {
+func (p *WRStatusProcessor) GenerateAbstractFilePath(param statusParameters) string {
 	return filepath.Join("/", "wr", "*", fmt.Sprintf("status.%s.*", param.ID))
-}
-
-func (p *WRStatusProcessor) GenerateAsteriskInvalidationPath() string {
-	return filepath.Join("/", "wr", "*", "status.*")
 }
 
 func (p *WRStatusProcessor) ProcessParameters(

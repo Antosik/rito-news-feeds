@@ -38,8 +38,7 @@ func init() {
 
 		TypeProcessor: &newsProcessor,
 
-		CFInvalidator: internal.NewCloudFrontInvalidator(),
-		S3Client:      internal.NewS3Client(),
+		S3Client: internal.NewS3Client(),
 	}
 }
 
@@ -50,12 +49,8 @@ func (p *LoRNewsProcessor) GenerateFilePath(param newsParameters) string {
 	return internal.FormatFilePath(filepath.Join("lor", param.Locale, "news"))
 }
 
-func (p *LoRNewsProcessor) GenerateInvalidationFilePath(param newsParameters) string {
+func (p *LoRNewsProcessor) GenerateAbstractFilePath(param newsParameters) string {
 	return fmt.Sprintf("/%s.*", p.GenerateFilePath(param))
-}
-
-func (p *LoRNewsProcessor) GenerateAsteriskInvalidationPath() string {
-	return filepath.Join("/", "lor", "*", "news.*")
 }
 
 func (p *LoRNewsProcessor) ProcessParameters(

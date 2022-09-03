@@ -2,12 +2,10 @@ package internal
 
 import (
 	"fmt"
-	"time"
 )
 
 type AbstractProcessor[ParamType interface{}] interface {
-	GenerateInvalidationFilePath(parameters ParamType) string
-	GenerateAsteriskInvalidationPath() string
+	GenerateAbstractFilePath(parameters ParamType) string
 	ProcessParameters(parameters ParamType) ([]FeedFile, []error)
 }
 
@@ -20,8 +18,7 @@ type MainProcessor[ParamType interface{}] struct {
 	TypeProcessor AbstractProcessor[ParamType]
 
 	// AWS
-	CFInvalidator *CloudFrontInvalidator
-	S3Client      *S3FeedClient
+	S3Client *S3FeedClient
 }
 
 func (p *MainProcessor[ParamType]) ProcessChunk(
@@ -31,7 +28,7 @@ func (p *MainProcessor[ParamType]) ProcessChunk(
 	s3Client *S3FeedClient,
 ) {
 	var (
-		invalidatePaths []string
+		generatedPaths  []string
 		generatedFiles  []FeedFile
 		errorsCollector = NewErrorCollector()
 	)
@@ -46,9 +43,9 @@ func (p *MainProcessor[ParamType]) ProcessChunk(
 		if len(files) > 0 {
 			generatedFiles = append(generatedFiles, files...)
 
-			invalidatePaths = append(
-				invalidatePaths,
-				p.TypeProcessor.GenerateInvalidationFilePath(param),
+			generatedPaths = append(
+				generatedPaths,
+				p.TypeProcessor.GenerateAbstractFilePath(param),
 			)
 		}
 	}
@@ -62,15 +59,15 @@ func (p *MainProcessor[ParamType]) ProcessChunk(
 	}
 
 	errorsChannel <- *errorsCollector
-	filesChannel <- invalidatePaths
+	filesChannel <- generatedPaths
 }
 
 func (p *MainProcessor[ParamType]) Process(params []ParamType) error {
 	var (
-		errorsChannel         = make(chan ErrorCollector)
-		errorsCollector       = NewErrorCollector()
-		invalidationChannel   = make(chan []string)
-		invalidationCollector = []string{}
+		errorsChannel           = make(chan ErrorCollector)
+		errorsCollector         = NewErrorCollector()
+		generatedPathsChannel   = make(chan []string)
+		generatedPathsCollector = []string{}
 	)
 
 	fmt.Printf(
@@ -81,32 +78,17 @@ func (p *MainProcessor[ParamType]) Process(params []ParamType) error {
 	)
 
 	for _, chunk := range SplitSliceToChunks(params, p.Concurrency) {
-		go p.ProcessChunk(invalidationChannel, errorsChannel, chunk, p.S3Client)
+		go p.ProcessChunk(generatedPathsChannel, errorsChannel, chunk, p.S3Client)
 	}
 
 	for i := 0; i < p.Concurrency; i++ {
 		errorsCollector.CollectFrom(<-errorsChannel)
 
-		invalidationCollector = append(invalidationCollector, <-invalidationChannel...)
+		generatedPathsCollector = append(generatedPathsCollector, <-generatedPathsChannel...)
 	}
 
-	if len(invalidationCollector) > len(params)/3 {
-		invalidationCollector = []string{
-			p.TypeProcessor.GenerateAsteriskInvalidationPath(),
-		}
-	}
-
-	fmt.Printf("Paths to invalidate count: %d\n", len(invalidationCollector))
-
-	// Invalidate CloudFront if new files were generated
-	if len(invalidationCollector) > 0 {
-		invalidationErr := p.CFInvalidator.Invalidate(
-			fmt.Sprintf("%s-%v", p.Name, time.Now().UTC().Unix()),
-			invalidationCollector,
-		)
-		if invalidationErr != nil {
-			errorsCollector.Collect(invalidationErr)
-		}
+	if len(generatedPathsCollector) > 0 {
+		fmt.Printf("Updated paths (%d): %v\n", len(generatedPathsCollector), generatedPathsCollector)
 	}
 
 	if errorsCollector.Size() > 0 {

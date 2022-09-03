@@ -38,8 +38,7 @@ func init() {
 
 		TypeProcessor: &esportsProcessor,
 
-		CFInvalidator: internal.NewCloudFrontInvalidator(),
-		S3Client:      internal.NewS3Client(),
+		S3Client: internal.NewS3Client(),
 	}
 }
 
@@ -49,12 +48,9 @@ type LoLEsportsProcessor struct{}
 func (p *LoLEsportsProcessor) GenerateFilePath(param esportsParameters) string {
 	return internal.FormatFilePath(filepath.Join("lol", param.Locale, "esports"))
 }
-func (p *LoLEsportsProcessor) GenerateInvalidationFilePath(param esportsParameters) string {
-	return fmt.Sprintf("/%s.*", p.GenerateFilePath(param))
-}
 
-func (p *LoLEsportsProcessor) GenerateAsteriskInvalidationPath() string {
-	return filepath.Join("/", "lol", "*", "esports.*")
+func (p *LoLEsportsProcessor) GenerateAbstractFilePath(param esportsParameters) string {
+	return fmt.Sprintf("/%s.*", p.GenerateFilePath(param))
 }
 
 func (p *LoLEsportsProcessor) ProcessParameters(
