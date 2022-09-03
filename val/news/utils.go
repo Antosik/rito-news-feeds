@@ -22,13 +22,18 @@ type newsParameters struct {
 }
 
 func valNewsEntryToFeedEntry(entry val.NewsEntry) internal.FeedEntry {
+	categories := make([]string, 0, len(entry.Categories)+len(entry.Tags))
+	categories = append(categories, entry.Categories...)
+	categories = append(categories, entry.Tags...)
+
 	return internal.FeedEntry{
-		Title:     entry.Title,
-		Summary:   entry.Description,
-		Link:      entry.URL,
-		Image:     entry.Image,
-		CreatedAt: entry.Date,
-		UpdatedAt: entry.Date,
+		Title:      entry.Title,
+		Summary:    entry.Description,
+		Link:       entry.URL,
+		Categories: categories,
+		Image:      entry.Image,
+		CreatedAt:  entry.Date,
+		UpdatedAt:  entry.Date,
 	}
 }
 
