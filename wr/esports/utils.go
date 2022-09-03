@@ -20,11 +20,15 @@ type esportsParameters struct {
 }
 
 func wrEsportsEntryToFeedEntry(entry wr.EsportsEntry) internal.FeedEntry {
+	categories := make([]string, 0, len(entry.Categories)+len(entry.Tags))
+	categories = append(categories, entry.Categories...)
+	categories = append(categories, entry.Tags...)
+
 	return internal.FeedEntry{
 		Title:      entry.Title,
 		Summary:    entry.Description,
 		Authors:    entry.Authors,
-		Categories: entry.Categories,
+		Categories: categories,
 		Link:       entry.URL,
 		Image:      entry.Image,
 		CreatedAt:  entry.Date,
