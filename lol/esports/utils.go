@@ -21,13 +21,14 @@ type esportsParameters struct {
 
 func lolEsportsEntryToFeedEntry(entry lol.EsportsEntry) internal.FeedEntry {
 	return internal.FeedEntry{
-		Title:     entry.Title,
-		Summary:   entry.Description,
-		Authors:   entry.Authors,
-		Link:      entry.URL,
-		Image:     entry.Image,
-		CreatedAt: entry.Date,
-		UpdatedAt: entry.Date,
+		Title:      entry.Title,
+		Summary:    entry.Description,
+		Authors:    entry.Authors,
+		Categories: entry.Tags,
+		Link:       entry.URL,
+		Image:      entry.Image,
+		CreatedAt:  entry.Date,
+		UpdatedAt:  entry.Date,
 	}
 }
 
