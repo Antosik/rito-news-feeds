@@ -20,7 +20,8 @@ local:
 
 validate:
 	sam validate \
-		--template ./templates/sam.template.yaml
+		--template ./templates/sam.template.yaml \
+		--lint
 
 deploy:
 	sam deploy \
@@ -32,6 +33,12 @@ deploy:
 			ParameterKey=BucketName,ParameterValue=${BUCKET_NAME} \
 			ParameterKey=DistributionId,ParameterValue=${DISTRIBUTION_ID} \
 			ParameterKey=Stage,ParameterValue=${STAGE}
+
+remove:
+	sam delete \
+		--stack-name rito-news-feeds-${STAGE} \
+		--config-file ./templates/samconfig.toml \
+		--config-env ${STAGE}
 #endregion SAM
 
 #region CDN

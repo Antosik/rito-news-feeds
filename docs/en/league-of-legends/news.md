@@ -28,6 +28,11 @@ https://rito-news.iamantosik.me/lol/{locale}/news.{extension}
 - Türkçe (`tr-tr`)
 - English (OCE) (`en-au`)
 - 한국어 (`ko-kr`)
+- English (SG) (`en-sg`)
+- English (PH) (`en-ph`)
+- Tiếng Việt (`vi-vn`)
+- ภาษาไทย (`th-th`)
+- 繁體中文 (`zh-tw`)
 
 ### Available extensions
 - RSS (`.rss`)

@@ -27,8 +27,8 @@ https://rito-news.iamantosik.me/val/{locale}/esports.{extension}
 - ภาษาไทย (`th-th`)
 - English (Philippines) (`en-ph`)
 - English (Singapore) (`en-sg`)
-- Indonesian (`.`)
-- Tiếng việt (`.`)
+- Indonesian (`id-id`)
+- Tiếng việt (`vi-vn`)
 
 ### Available extensions
 - RSS (`.rss`)

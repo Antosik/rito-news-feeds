@@ -93,5 +93,30 @@
       "locale": "ko-KR",
       "title": "최신 소식",
       "description": "리그 오브 레전드 관련 최신 소식을 만나보세요."
+    },
+    {
+      "locale": "en-SG",
+      "title": "Latest News",
+      "description": "The most up-to-date news from the world of League of Legends."
+    },
+    {
+      "locale": "en-PH",
+      "title": "Latest News",
+      "description": "The most up-to-date news from the world of League of Legends."
+    },
+    {
+      "locale": "vi-VN",
+      "title": "Tin tức mới nhất",
+      "description": "Cập nhật những thông tin mới nhất về thế giới Liên Minh Huyền Thoại."
+    },
+    {
+      "locale": "th-TH",
+      "title": "ข่าวสารล่าสุด",
+      "description": "ข่าวสารใหม่ล่าสุดเกี่ยวกับโลกของ League of Legends"
+    },
+    {
+      "locale": "zh-TW",
+      "title": "《英雄聯盟》",
+      "description": "《英雄聯盟》的最新消息攏底加。"
     }
   ]

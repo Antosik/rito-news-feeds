@@ -88,5 +88,30 @@
       "locale": "ja-JP",
       "title": "チームファイト タクティクス / ニュース - チームファイト タクティクス",
       "description": "チームファイト タクティクスの最新情報を確認しましょう"
+  },
+  {
+    "locale": "en-SG",
+    "title": "Teamfight Tactics | News - Teamfight Tactics",
+    "description": "Stay up to date on everything from the world of Teamfight Tactics."
+  },
+  {
+    "locale": "en-PH",
+    "title": "Teamfight Tactics | News - Teamfight Tactics",
+    "description": "Stay up to date on everything from the world of Teamfight Tactics."
+  },
+  {
+    "locale": "vi-VN",
+    "title": "Đấu Trường Chân Lý | Tin Tức - Đấu Trường Chân Lý",
+    "description": "Cập nhật những tin tức mới nhất của thế giới Đấu Trường Chân Lý."
+  },
+  {
+    "locale": "th-TH",
+    "title": "Teamfight Tactics | ข่าวสาร - Teamfight Tactics",
+    "description": "ไม่พลาดทุกข่าวสารในโลกของ Teamfight Tactics"
+  },
+  {
+    "locale": "zh-TW",
+    "title": "《聯盟戰棋》| 最新消息 - 《聯盟戰棋》",
+    "description": "持續關注《聯盟戰棋》大小事，最新消息不漏接！"
   }
 ]
