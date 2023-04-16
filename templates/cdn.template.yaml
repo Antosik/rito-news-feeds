@@ -21,15 +21,6 @@ Resources:
     Type: AWS::S3::Bucket
     Properties:
       BucketName: !Sub '${BucketName}-${Stage}'
-      CorsConfiguration:
-        CorsRules:
-          - AllowedOrigins:
-              - '*'
-            AllowedMethods:
-              - GET
-              - HEAD
-            AllowedHeaders:
-              - '*'
       Tags:
         - Key: Product
           Value: rito-news
@@ -106,7 +97,7 @@ Resources:
             - HEAD
           Compress: True
           OriginRequestPolicyId: 88a5eaf4-2fd4-4709-b370-b4c650ea3fcf # https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/using-managed-origin-request-policies.html
-          ResponseHeadersPolicyId: 60669652-455b-4ae9-85a4-c4c02393f86c # https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/using-managed-response-headers-policies.html
+          ResponseHeadersPolicyId: eaab4381-ed33-4a86-88ca-d9558dc6cd63 # https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/using-managed-response-headers-policies.html
           TargetOriginId: !Sub 'S3-origin-${s3WebSiteBucket}'
           ViewerProtocolPolicy: redirect-to-https
         DefaultRootObject: index.html
