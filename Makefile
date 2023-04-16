@@ -20,7 +20,8 @@ local:
 
 validate:
 	sam validate \
-		--template ./templates/sam.template.yaml
+		--template ./templates/sam.template.yaml \
+		--lint
 
 deploy:
 	sam deploy \
