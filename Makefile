@@ -33,6 +33,12 @@ deploy:
 			ParameterKey=BucketName,ParameterValue=${BUCKET_NAME} \
 			ParameterKey=DistributionId,ParameterValue=${DISTRIBUTION_ID} \
 			ParameterKey=Stage,ParameterValue=${STAGE}
+
+remove:
+	sam delete \
+		--stack-name rito-news-feeds-${STAGE} \
+		--config-file ./templates/samconfig.toml \
+		--config-env ${STAGE}
 #endregion SAM
 
 #region CDN
