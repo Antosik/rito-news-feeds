@@ -10,9 +10,8 @@ https://rito-news.iamantosik.me/lor/{locale}/status.{server}.{extension}
 
 ### Available servers
 - Americas (`americas`)
-- Asia (`asia`)
+- Asia-Pacific (`apac`)
 - Europe (`europe`)
-- Southeast Asia (`sea`)
 
 ### Available locales
 - English (`en-us`)

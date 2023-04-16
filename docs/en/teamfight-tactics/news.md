@@ -27,6 +27,11 @@ https://rito-news.iamantosik.me/tft/{locale}/news.{extension}
 - Türkçe (`tr-tr`)
 - 한국어 (`ko-kr`)
 - 日本語 (`ja-jp`)
+- English (SG) (`en-sg`)
+- English (PH) (`en-ph`)
+- Tiếng Việt (`vi-vn`)
+- ภาษาไทย (`th-th`)
+- 繁體中文 (`zh-tw`)
 
 ### Available extensions
 - RSS (`.rss`)

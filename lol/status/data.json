@@ -50,13 +50,38 @@
         "locales": ["en_US", "cs_CZ", "de_DE", "el_GR", "es_MX", "es_ES", "fr_FR", "hu_HU", "it_IT", "ja_JP", "ko_KR", "pl_PL", "pt_BR", "ro_RO", "ru_RU", "tr_TR"]
     },
     {
+        "id": "ph2",
+        "region": "ph",
+        "locales": ["en_PH"]
+    },
+    {
         "id": "ru1",
         "region": "ru",
         "locales": ["ru_RU"]
     },
     {
+        "id": "sg2",
+        "region": "sg",
+        "locales": ["en_SG", "zh_MY"]
+    },
+    {
+        "id": "th2",
+        "region": "th",
+        "locales": ["th_TH"]
+    },
+    {
         "id": "tr1",
         "region": "tr",
         "locales": ["tr_TR"]
+    },
+    {
+        "id": "tw2",
+        "region": "tw",
+        "locales": ["zh_TW"]
+    },
+    {
+        "id": "vn2",
+        "region": "vn",
+        "locales": ["vi_VN"]
     }
   ]

@@ -70,5 +70,13 @@
     {
         "locale": "en-SG",
         "title": "VALORANT - Esports News"
+    },
+    {
+        "locale": "id-ID",
+        "title": "VALORANT - Berita Esports"
+    },
+    {
+        "locale": "vi-VN",
+        "title": "VALORANT - Tin tức thể thao điện tử"
     }
 ]
