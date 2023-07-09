@@ -25,7 +25,7 @@ var (
 )
 
 const (
-	channelsCount = 5
+	channelsCount = 10
 )
 
 func init() {
