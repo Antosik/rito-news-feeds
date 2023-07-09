@@ -24,7 +24,7 @@ var (
 
 const (
 	articlesCount = 100
-	channelsCount = 3
+	channelsCount = 5
 )
 
 func init() {

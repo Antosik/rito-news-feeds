@@ -1,11 +1,16 @@
-HEADLESS_CHROMIUM_RELEASE = 1.0.0-57
+HEADLESS_CHROMIUM_RELEASE=114.0.0
 
 build-ChromiumLayer:
 	# Create folders for binaries
-	mkdir -p $(ARTIFACTS_DIR)/bin
+	mkdir -p $(ARTIFACTS_DIR)/temp-chromium
 
 	# Download and unzip headless chromium
-	curl -SL https://github.com/adieuadieu/serverless-chrome/releases/download/v$(HEADLESS_CHROMIUM_RELEASE)/stable-headless-chromium-amazonlinux-2.zip > $(ARTIFACTS_DIR)/headless-chromium.zip
-	unzip $(ARTIFACTS_DIR)/headless-chromium.zip -d $(ARTIFACTS_DIR)/bin/
-	mv $(ARTIFACTS_DIR)/bin/headless-chromium $(ARTIFACTS_DIR)/bin/chromium
-	rm $(ARTIFACTS_DIR)/headless-chromium.zip
+	curl -SL https://github.com/Sparticuz/chromium/releases/download/v$(HEADLESS_CHROMIUM_RELEASE)/chromium-v$(HEADLESS_CHROMIUM_RELEASE)-pack.tar > $(ARTIFACTS_DIR)/headless-chromium.tar
+	tar -xf $(ARTIFACTS_DIR)/headless-chromium.tar -C $(ARTIFACTS_DIR)/temp-chromium
+
+	mkdir -p $(ARTIFACTS_DIR)/
+	brotli -d $(ARTIFACTS_DIR)/temp-chromium/chromium.br -o '$(ARTIFACTS_DIR)/chromium'
+	chmod 777 $(ARTIFACTS_DIR)/chromium
+
+	rm $(ARTIFACTS_DIR)/headless-chromium.tar
+	rm -rf $(ARTIFACTS_DIR)/temp-chromium

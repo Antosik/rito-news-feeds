@@ -15,6 +15,7 @@ Globals:
         DOMAIN_NAME: !Ref DomainName
         DISTRIBUTION_ID: !Ref DistributionId
         TTL: !Ref TTL
+        CHROMIUM_PATH: /opt/chromium
 
 Parameters:
   BucketName:
