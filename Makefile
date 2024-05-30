@@ -111,8 +111,8 @@ build-LegendsOfRuneterraStatusChecker:
 	mv ./lorstatus $(ARTIFACTS_DIR)/bootstrap
 
 build-LegendsOfRuneterraNewsChecker:
-	GOARCH=amd64 GOOS=linux go build -trimpath -o ./lornews lor/news/main.go lor/news/utils.go
-	mv ./lornews $(ARTIFACTS_DIR)/lornews
+	GOARCH=arm64 GOOS=linux go build -trimpath -o ./lornews lor/news/main.go lor/news/utils.go
+	mv ./lornews $(ARTIFACTS_DIR)/bootstrap
 #endregion Build: Legends of Runeterra
 
 #region Build: Teamfight Tactics
