@@ -23,10 +23,22 @@ validate:
 		--template ./templates/sam.template.yaml \
 		--lint
 
+deploy-init:
+	sam deploy \
+		--stack-name rito-news-feeds-${STAGE} \
+		--config-env ${STAGE} \
+		--parameter-overrides \
+			ParameterKey=DomainName,ParameterValue=${DOMAIN_NAME} \
+			ParameterKey=BucketName,ParameterValue=${BUCKET_NAME} \
+			ParameterKey=DistributionId,ParameterValue=${DISTRIBUTION_ID} \
+			ParameterKey=Stage,ParameterValue=${STAGE} \
+		--capabilities CAPABILITY_NAMED_IAM \
+		--guided
+
 deploy:
 	sam deploy \
 		--stack-name rito-news-feeds-${STAGE} \
-		--config-file ./templates/samconfig.toml \
+		--config-file ./samconfig.toml \
 		--config-env ${STAGE} \
 		--parameter-overrides \
 			ParameterKey=DomainName,ParameterValue=${DOMAIN_NAME} \
