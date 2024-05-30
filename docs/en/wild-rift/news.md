@@ -5,7 +5,7 @@ The service generates files that contains the news from official Wild Rift websi
 ## File URL
 The file url should be formed like
 ```
-https://rito-news.iamantosik.me/wr/{locale}/news.{extension}
+https://data.rito.news/wr/{locale}/news.{extension}
 ```
 
 ### Available locales
@@ -37,5 +37,5 @@ https://rito-news.iamantosik.me/wr/{locale}/news.{extension}
 - Raw data (`.json`)
 
 ### Examples
-- RSS with italian locale - https://rito-news.iamantosik.me/wr/it-it/news.rss
-- Raw news data with korean locale - https://rito-news.iamantosik.me/wr/ko-kr/news.json
+- RSS with italian locale - https://data.rito.news/wr/it-it/news.rss
+- Raw news data with korean locale - https://data.rito.news/wr/ko-kr/news.json

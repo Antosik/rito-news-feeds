@@ -5,7 +5,7 @@ The service generates files that contains the esports news from official VALORAN
 ## File URL
 The file url should be formed like
 ```
-https://rito-news.iamantosik.me/val/{locale}/esports.{extension}
+https://data.rito.news/val/{locale}/esports.{extension}
 ```
 
 ### Available locales
@@ -37,5 +37,5 @@ https://rito-news.iamantosik.me/val/{locale}/esports.{extension}
 - Raw data (`.json`)
 
 ### Examples
-- RSS with italian locale - https://rito-news.iamantosik.me/val/it-it/esports.rss
-- Raw news data with korean locale - https://rito-news.iamantosik.me/val/ko-kr/esports.json
+- RSS with italian locale - https://data.rito.news/val/it-it/esports.rss
+- Raw news data with korean locale - https://data.rito.news/val/ko-kr/esports.json

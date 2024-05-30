@@ -5,7 +5,7 @@ The service generates files that contains the news from official Teamfight Tacti
 ## File URL
 The file url should be formed like
 ```
-https://rito-news.iamantosik.me/tft/{locale}/news.{extension}
+https://data.rito.news/tft/{locale}/news.{extension}
 ```
 
 ### Available locales
@@ -40,5 +40,5 @@ https://rito-news.iamantosik.me/tft/{locale}/news.{extension}
 - Raw data (`.json`)
 
 ### Examples
-- RSS with italian locale - https://rito-news.iamantosik.me/tft/it-it/news.rss
-- Raw news data with korean locale - https://rito-news.iamantosik.me/tft/ko-kr/news.json
+- RSS with italian locale - https://data.rito.news/tft/it-it/news.rss
+- Raw news data with korean locale - https://data.rito.news/tft/ko-kr/news.json

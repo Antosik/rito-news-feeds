@@ -5,7 +5,7 @@ The service generates files that contains the esports news from official Wild Ri
 ## File URL
 The file url should be formed like
 ```
-https://rito-news.iamantosik.me/wr/{locale}/esports.{extension}
+https://data.rito.news/wr/{locale}/esports.{extension}
 ```
 
 ### Available locales
@@ -40,5 +40,5 @@ https://rito-news.iamantosik.me/wr/{locale}/esports.{extension}
 - Raw data (`.json`)
 
 ### Examples
-- RSS with italian locale - https://rito-news.iamantosik.me/wr/it-it/esports.rss
-- Raw news data with korean locale - https://rito-news.iamantosik.me/wr/ko-kr/esports.json
+- RSS with italian locale - https://data.rito.news/wr/it-it/esports.rss
+- Raw news data with korean locale - https://data.rito.news/wr/ko-kr/esports.json

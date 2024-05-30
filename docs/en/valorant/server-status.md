@@ -5,7 +5,7 @@ The service generates files that contains theserver status message from VALORANT
 ## File URL
 The file url should be formed like
 ```
-https://rito-news.iamantosik.me/val/{locale}/status.{server}.{extension}
+https://data.rito.news/val/{locale}/status.{server}.{extension}
 ```
 
 ### Available servers
@@ -44,5 +44,5 @@ https://rito-news.iamantosik.me/val/{locale}/status.{server}.{extension}
 - Raw data (`.json`)
 
 ### Examples
-- RSS for north america server status messages with english locale - https://rito-news.iamantosik.me/val/en-us/status.na.rss
-- Raw server status data for europe server with italian locale - https://rito-news.iamantosik.me/val/it-it/status.eu.json
+- RSS for north america server status messages with english locale - https://data.rito.news/val/en-us/status.na.rss
+- Raw server status data for europe server with italian locale - https://data.rito.news/val/it-it/status.eu.json

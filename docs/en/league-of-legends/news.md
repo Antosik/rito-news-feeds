@@ -5,7 +5,7 @@ The service generates files that contains the news from official League of Legen
 ## File URL
 The files url looks like
 ```
-https://rito-news.iamantosik.me/lol/{locale}/news.{extension}
+https://data.rito.news/lol/{locale}/news.{extension}
 ```
 
 ### Available locales
@@ -41,5 +41,5 @@ https://rito-news.iamantosik.me/lol/{locale}/news.{extension}
 - Raw data (`.json`)
 
 ### Examples
-- RSS for NA news - https://rito-news.iamantosik.me/lol/en-us/news.rss
-- Raw news data for Korean server - https://rito-news.iamantosik.me/lol/ko-kr/news.json
+- RSS for NA news - https://data.rito.news/lol/en-us/news.rss
+- Raw news data for Korean server - https://data.rito.news/lol/ko-kr/news.json

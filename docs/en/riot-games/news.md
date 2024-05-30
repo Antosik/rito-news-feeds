@@ -5,7 +5,7 @@ The service generates files that contains the news from official Riot Games webs
 ## File URL
 The files url looks like
 ```
-https://rito-news.iamantosik.me/riotgames/{locale}/news.{extension}
+https://data.rito.news/riotgames/{locale}/news.{extension}
 ```
 
 ### Available locales
@@ -39,5 +39,5 @@ https://rito-news.iamantosik.me/riotgames/{locale}/news.{extension}
 - Raw data (`.json`)
 
 ### Examples
-- RSS for news in english locale - https://rito-news.iamantosik.me/riotgames/en/news.rss
-- Raw news data in korean - https://rito-news.iamantosik.me/riotgames/ko/news.json
+- RSS for news in english locale - https://data.rito.news/riotgames/en/news.rss
+- Raw news data in korean - https://data.rito.news/riotgames/ko/news.json
