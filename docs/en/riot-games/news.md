@@ -10,7 +10,6 @@ https://data.rito.news/riotgames/{locale}/news.{extension}
 
 ### Available locales
 - English (NA) - (`en`)
-- Indonesian - (`id`)
 - Malaysian - (`ms`)
 - Português - (`pt-br`)
 - Čeština - (`cs`)
