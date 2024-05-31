@@ -5,7 +5,7 @@ The service generates files that contains theserver status message from League o
 ## File URL
 The files url looks like
 ```
-https://rito-news.iamantosik.me/lol/{locale}/status.{server}.{extension}
+https://data.rito.news/lol/{locale}/status.{server}.{extension}
 ```
 
 ### Available servers and locales
@@ -61,5 +61,5 @@ https://rito-news.iamantosik.me/lol/{locale}/status.{server}.{extension}
 - Raw data (`.json`)
 
 ### Examples
-- RSS for NA server status messages - https://rito-news.iamantosik.me/lol/en-us/status.na.rss
-- Raw server status data for Korean server - https://rito-news.iamantosik.me/lol/ko-kr/status.kr.json
+- RSS for NA server status messages - https://data.rito.news/lol/en-us/status.na.rss
+- Raw server status data for Korean server - https://data.rito.news/lol/ko-kr/status.kr.json

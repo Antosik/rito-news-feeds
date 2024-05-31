@@ -5,7 +5,7 @@ The service generates files that contains theserver status message from Wild Rif
 ## File URL
 The file url should be formed like
 ```
-https://rito-news.iamantosik.me/wr/{locale}/status.{server}.{extension}
+https://data.rito.news/wr/{locale}/status.{server}.{extension}
 ```
 
 ### Available servers
@@ -47,5 +47,5 @@ https://rito-news.iamantosik.me/wr/{locale}/status.{server}.{extension}
 - Raw data (`.json`)
 
 ### Examples
-- RSS for north america server status messages with english locale - https://rito-news.iamantosik.me/wr/en-us/status.na.rss
-- Raw server status data for europe server with italian locale - https://rito-news.iamantosik.me/wr/it-it/status.eu.json
+- RSS for north america server status messages with english locale - https://data.rito.news/wr/en-us/status.na.rss
+- Raw server status data for europe server with italian locale - https://data.rito.news/wr/it-it/status.eu.json

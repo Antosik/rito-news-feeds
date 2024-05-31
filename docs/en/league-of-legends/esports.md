@@ -5,7 +5,7 @@ The service generates files that contains the esports news from official League 
 ## File URL
 The files url looks like
 ```
-https://rito-news.iamantosik.me/lol/{locale}/esports.{extension}
+https://data.rito.news/lol/{locale}/esports.{extension}
 ```
 
 ### Available locales
@@ -41,5 +41,5 @@ https://rito-news.iamantosik.me/lol/{locale}/esports.{extension}
 - Raw data (`.json`)
 
 ### Examples
-- RSS for NA esports news - https://rito-news.iamantosik.me/lol/en-us/esports.rss
-- Raw esports news data for Korean server - https://rito-news.iamantosik.me/lol/ko-kr/esports.json
+- RSS for NA esports news - https://data.rito.news/lol/en-us/esports.rss
+- Raw esports news data for Korean server - https://data.rito.news/lol/ko-kr/esports.json

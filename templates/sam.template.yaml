@@ -101,7 +101,7 @@ Resources:
     Metadata:
       BuildMethod: makefile
     Properties:
-      Runtime: provided.al2
+      Runtime: provided.al2023
       Architectures:
         - arm64
       FunctionName: !Sub
@@ -126,7 +126,7 @@ Resources:
     Metadata:
       BuildMethod: makefile
     Properties:
-      Runtime: provided.al2
+      Runtime: provided.al2023
       Architectures:
         - arm64
       FunctionName: !Sub
@@ -161,6 +161,7 @@ Resources:
       Handler: lolesports
       Role: !GetAtt RitoNewsLambdaRole.Arn
       Timeout: 600
+      MemorySize: 624
       Layers:
         - !Ref ChromiumLayer
       Events:
@@ -181,7 +182,7 @@ Resources:
     Metadata:
       BuildMethod: makefile
     Properties:
-      Runtime: provided.al2
+      Runtime: provided.al2023
       Architectures:
         - arm64
       FunctionName: !Sub
@@ -206,7 +207,7 @@ Resources:
     Metadata:
       BuildMethod: makefile
     Properties:
-      Runtime: provided.al2
+      Runtime: provided.al2023
       Architectures:
         - arm64
       FunctionName: !Sub
@@ -262,7 +263,7 @@ Resources:
     Metadata:
       BuildMethod: makefile
     Properties:
-      Runtime: provided.al2
+      Runtime: provided.al2023
       Architectures:
         - arm64
       FunctionName: !Sub
@@ -287,19 +288,15 @@ Resources:
     Metadata:
       BuildMethod: makefile
     Properties:
-      Runtime: go1.x
+      Runtime: provided.al2023
       Architectures:
-        - x86_64
+        - arm64
       FunctionName: !Sub
         - 'rito-news-lor-news-${Stage}'
         - Stage: !Ref Stage
       CodeUri: ../
-      Handler: lornews
+      Handler: bootstrap
       Role: !GetAtt RitoNewsLambdaRole.Arn
-      Timeout: 600
-      MemorySize: 624
-      Layers:
-        - !Ref ChromiumLayer
       Events:
         Schedule:
           Type: Schedule
@@ -318,7 +315,7 @@ Resources:
     Metadata:
       BuildMethod: makefile
     Properties:
-      Runtime: provided.al2
+      Runtime: provided.al2023
       Architectures:
         - arm64
       FunctionName: !Sub
@@ -345,7 +342,7 @@ Resources:
     Metadata:
       BuildMethod: makefile
     Properties:
-      Runtime: provided.al2
+      Runtime: provided.al2023
       Architectures:
         - arm64
       FunctionName: !Sub
@@ -370,7 +367,7 @@ Resources:
     Metadata:
       BuildMethod: makefile
     Properties:
-      Runtime: provided.al2
+      Runtime: provided.al2023
       Architectures:
         - arm64
       FunctionName: !Sub
@@ -405,6 +402,7 @@ Resources:
       Handler: wresports
       Role: !GetAtt RitoNewsLambdaRole.Arn
       Timeout: 600
+      MemorySize: 624
       Layers:
         - !Ref ChromiumLayer
       Events:
@@ -425,7 +423,7 @@ Resources:
     Metadata:
       BuildMethod: makefile
     Properties:
-      Runtime: provided.al2
+      Runtime: provided.al2023
       Architectures:
         - arm64
       FunctionName: !Sub
@@ -450,7 +448,7 @@ Resources:
     Metadata:
       BuildMethod: makefile
     Properties:
-      Runtime: provided.al2
+      Runtime: provided.al2023
       Architectures:
         - arm64
       FunctionName: !Sub

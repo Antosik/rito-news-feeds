@@ -5,7 +5,7 @@ The service generates files that contains theserver status message from Legends 
 ## File URL
 The file url should be formed like
 ```
-https://rito-news.iamantosik.me/lor/{locale}/status.{server}.{extension}
+https://data.rito.news/lor/{locale}/status.{server}.{extension}
 ```
 
 ### Available servers
@@ -37,5 +37,5 @@ https://rito-news.iamantosik.me/lor/{locale}/status.{server}.{extension}
 - Raw data (`.json`)
 
 ### Examples
-- RSS for americas server status messages with english locale - https://rito-news.iamantosik.me/lor/en-us/status.americas.rss
-- Raw server status data for europe server with italian locale - https://rito-news.iamantosik.me/lor/it-it/status.europe.json
+- RSS for americas server status messages with english locale - https://data.rito.news/lor/en-us/status.americas.rss
+- Raw server status data for europe server with italian locale - https://data.rito.news/lor/it-it/status.europe.json

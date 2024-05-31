@@ -5,7 +5,7 @@ The service generates files that contains the news from official Legends of Rune
 ## File URL
 The file url should be formed like
 ```
-https://rito-news.iamantosik.me/lor/{locale}/news.{extension}
+https://data.rito.news/lor/{locale}/news.{extension}
 ```
 
 ### Available locales
@@ -33,5 +33,5 @@ https://rito-news.iamantosik.me/lor/{locale}/news.{extension}
 - Raw data (`.json`)
 
 ### Examples
-- RSS for English locale news - https://rito-news.iamantosik.me/lor/en-us/news.rss
-- Raw news data for Korean locale - https://rito-news.iamantosik.me/lor/ko-kr/news.json
+- RSS for English locale news - https://data.rito.news/lor/en-us/news.rss
+- Raw news data for Korean locale - https://data.rito.news/lor/ko-kr/news.json
