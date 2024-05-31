@@ -1,5 +1,5 @@
 require (
-	github.com/Antosik/rito-news v0.0.0-20240530162334-89bba25b23a3
+	github.com/Antosik/rito-news v0.0.0-20240531100356-d5a28632df37
 	github.com/aws/aws-lambda-go v1.47.0
 	github.com/aws/aws-sdk-go-v2 v1.27.0
 	github.com/aws/aws-sdk-go-v2/config v1.27.16
