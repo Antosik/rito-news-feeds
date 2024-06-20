@@ -1,5 +1,5 @@
-github.com/Antosik/rito-news v0.0.0-20240607113602-75221da3ee1f h1:TsspUJludTL/I0JMetcBUNOgqofMJDsRZyeZ7g2cYZw=
-github.com/Antosik/rito-news v0.0.0-20240607113602-75221da3ee1f/go.mod h1:qcn2oIZz0JJZwV/Kupxgawn9GuQ+S945ROLU/IfcFTo=
+github.com/Antosik/rito-news v0.0.0-20240620130524-5cc9f50d7242 h1:m8MP+fZ7uNoc7P5gTjyOiUf/kR+3i0NU5TvS+ehpl7s=
+github.com/Antosik/rito-news v0.0.0-20240620130524-5cc9f50d7242/go.mod h1:qcn2oIZz0JJZwV/Kupxgawn9GuQ+S945ROLU/IfcFTo=
 github.com/PuerkitoBio/goquery v1.9.2 h1:4/wZksC3KgkQw7SQgkKotmKljk0M6V8TUvA8Wb4yPeE=
 github.com/PuerkitoBio/goquery v1.9.2/go.mod h1:GHPCaP0ODyyxqcNoFGYlAprUFH81NuRPd0GX3Zu2Mvk=
 github.com/andybalholm/cascadia v1.3.2 h1:3Xi6Dw5lHF15JtdcmAHD3i1+T8plmv7BQ/nsViSLyss=
