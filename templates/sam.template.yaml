@@ -386,35 +386,6 @@ Resources:
       Tags:
         Product: rito-news
         Stage: !Ref Stage
-
-  WildRiftEsportsChecker:
-    Type: AWS::Serverless::Function
-    Metadata:
-      BuildMethod: makefile
-    Properties:
-      Runtime: go1.x
-      Architectures:
-        - x86_64
-      FunctionName: !Sub
-        - 'rito-news-wr-esports-${Stage}'
-        - Stage: !Ref Stage
-      CodeUri: ../
-      Handler: wresports
-      Role: !GetAtt RitoNewsLambdaRole.Arn
-      Timeout: 600
-      MemorySize: 624
-      Layers:
-        - !Ref ChromiumLayer
-      Events:
-        Schedule:
-          Type: Schedule
-          Properties:
-            Schedule: !Sub
-              - 'rate(${TTL} minutes)'
-              - TTL: !Ref TTL
-      Tags:
-        Product: rito-news
-        Stage: !Ref Stage
   #endregion Wild Rift
 
   #region Riot Games

@@ -28,11 +28,10 @@ This service generates an Atom, JSONFeed, RSS and raw JSON data from various off
 -   VALORANT
     -   [News](docs/en/valorant/news.md)
     -   [Esports](docs/en/valorant/esports.md)
-    -   [Server status](docs/en/league-of-legends/server-status.md)
+    -   [Server status](docs/en/valorant/server-status.md)
 -   Wild Rift
     -   [News](docs/en/wild-rift/news.md)
-    -   [Esports](docs/en/league-of-legends/esports.md)
-    -   [Server status](docs/en/league-of-legends/server-status.md)
+    -   [Server status](docs/en/wild-rift/server-status.md)
 
 ## Attribution
 This service isn't developed by Riot Games and doesn't reflect the views or opinions of Riot Games or anyone officially involved in producing or managing League of Legends, Legends of Runeterra, Teamfight Tactics, VALORANT, or Wild Rift. League of Legends, Legends of Runeterra, Teamfight Tactics, VALORANT, Wild Rift and Riot Games are trademarks or registered trademarks of Riot Games, Inc. League of Legends, Legends of Runeterra, Teamfight Tactics, VALORANT, Wild Rift (c) Riot Games, Inc.
