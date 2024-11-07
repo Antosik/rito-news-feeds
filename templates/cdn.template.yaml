@@ -68,8 +68,8 @@ Resources:
       CachePolicyConfig:
         Name: !Sub 'RitoNewsFeedsCachePolicy-${Stage}'
         MinTTL: 1
-        DefaultTTL: 600
-        MaxTTL: 900
+        DefaultTTL: 300
+        MaxTTL: 450
         ParametersInCacheKeyAndForwardedToOrigin:
           CookiesConfig:
             CookieBehavior: none

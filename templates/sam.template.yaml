@@ -41,7 +41,7 @@ Parameters:
     Description: Stage name aka dev/prod
   TTL:
     Type: Number
-    Default: 20
+    Default: 10
     Description: Time-to-live for RSS feeds
 
 Resources:
