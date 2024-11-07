@@ -6,7 +6,15 @@ Description: >
 
 Globals:
   Function:
+    Architectures:
+      - arm64
+    CodeUri: ../
+    Handler: bootstrap
     MemorySize: 512
+    Runtime: provided.al2023
+    Tags:
+      Product: rito-news
+      Stage: !Ref Stage
     Timeout: 300
     Tracing: Active
     Environment:
@@ -37,20 +45,6 @@ Parameters:
     Description: Time-to-live for RSS feeds
 
 Resources:
-  #region Chrome layer
-  ChromiumLayer:
-    Type: AWS::Serverless::LayerVersion
-    Metadata:
-      BuildMethod: makefile
-    Properties:
-      LayerName: !Sub
-        - 'chromium-layer-${Stage}'
-        - Stage: !Ref Stage
-      ContentUri: ../layers/chromium
-      CompatibleRuntimes:
-        - go1.x
-  #endregion Chrome layer
-
   #region RitoNews Lambda role
   RitoNewsLambdaRole:
     Type: AWS::IAM::Role
@@ -101,14 +95,9 @@ Resources:
     Metadata:
       BuildMethod: makefile
     Properties:
-      Runtime: provided.al2023
-      Architectures:
-        - arm64
       FunctionName: !Sub
         - 'rito-news-lol-status-${Stage}'
         - Stage: !Ref Stage
-      CodeUri: ../
-      Handler: bootstrap
       Role: !GetAtt RitoNewsLambdaRole.Arn
       Events:
         Schedule:
@@ -117,23 +106,15 @@ Resources:
             Schedule: !Sub
               - 'rate(${TTL} minutes)'
               - TTL: !Ref TTL
-      Tags:
-        Product: rito-news
-        Stage: !Ref Stage
 
   LeagueOfLegendsNewsChecker:
     Type: AWS::Serverless::Function
     Metadata:
       BuildMethod: makefile
     Properties:
-      Runtime: provided.al2023
-      Architectures:
-        - arm64
       FunctionName: !Sub
         - 'rito-news-lol-news-${Stage}'
         - Stage: !Ref Stage
-      CodeUri: ../
-      Handler: bootstrap
       Role: !GetAtt RitoNewsLambdaRole.Arn
       Events:
         Schedule:
@@ -142,28 +123,16 @@ Resources:
             Schedule: !Sub
               - 'rate(${TTL} minutes)'
               - TTL: !Ref TTL
-      Tags:
-        Product: rito-news
-        Stage: !Ref Stage
 
   LeagueOfLegendsEsportsChecker:
     Type: AWS::Serverless::Function
     Metadata:
       BuildMethod: makefile
     Properties:
-      Runtime: go1.x
-      Architectures:
-        - x86_64
       FunctionName: !Sub
         - 'rito-news-lol-esports-${Stage}'
         - Stage: !Ref Stage
-      CodeUri: ../
-      Handler: lolesports
       Role: !GetAtt RitoNewsLambdaRole.Arn
-      Timeout: 600
-      MemorySize: 624
-      Layers:
-        - !Ref ChromiumLayer
       Events:
         Schedule:
           Type: Schedule
@@ -171,9 +140,6 @@ Resources:
             Schedule: !Sub
               - 'rate(${TTL} minutes)'
               - TTL: !Ref TTL
-      Tags:
-        Product: rito-news
-        Stage: !Ref Stage
   #endregion League of Legends
 
   #region VALORANT
@@ -182,14 +148,9 @@ Resources:
     Metadata:
       BuildMethod: makefile
     Properties:
-      Runtime: provided.al2023
-      Architectures:
-        - arm64
       FunctionName: !Sub
         - 'rito-news-val-status-${Stage}'
         - Stage: !Ref Stage
-      CodeUri: ../
-      Handler: bootstrap
       Role: !GetAtt RitoNewsLambdaRole.Arn
       Events:
         Schedule:
@@ -198,23 +159,15 @@ Resources:
             Schedule: !Sub
               - 'rate(${TTL} minutes)'
               - TTL: !Ref TTL
-      Tags:
-        Product: rito-news
-        Stage: !Ref Stage
 
   VALORANTNewsChecker:
     Type: AWS::Serverless::Function
     Metadata:
       BuildMethod: makefile
     Properties:
-      Runtime: provided.al2023
-      Architectures:
-        - arm64
       FunctionName: !Sub
         - 'rito-news-val-news-${Stage}'
         - Stage: !Ref Stage
-      CodeUri: ../
-      Handler: bootstrap
       Role: !GetAtt RitoNewsLambdaRole.Arn
       Events:
         Schedule:
@@ -223,28 +176,16 @@ Resources:
             Schedule: !Sub
               - 'rate(${TTL} minutes)'
               - TTL: !Ref TTL
-      Tags:
-        Product: rito-news
-        Stage: !Ref Stage
 
   VALORANTEsportsChecker:
     Type: AWS::Serverless::Function
     Metadata:
       BuildMethod: makefile
     Properties:
-      Runtime: go1.x
-      Architectures:
-        - x86_64
       FunctionName: !Sub
         - 'rito-news-val-esports-${Stage}'
         - Stage: !Ref Stage
-      CodeUri: ../
-      Handler: valesports
       Role: !GetAtt RitoNewsLambdaRole.Arn
-      Timeout: 600
-      MemorySize: 624
-      Layers:
-        - !Ref ChromiumLayer
       Events:
         Schedule:
           Type: Schedule
@@ -252,9 +193,6 @@ Resources:
             Schedule: !Sub
               - 'rate(${TTL} minutes)'
               - TTL: !Ref TTL
-      Tags:
-        Product: rito-news
-        Stage: !Ref Stage
   #endregion VALORANT
 
   #region Legends of Runeterra
@@ -263,14 +201,9 @@ Resources:
     Metadata:
       BuildMethod: makefile
     Properties:
-      Runtime: provided.al2023
-      Architectures:
-        - arm64
       FunctionName: !Sub
         - 'rito-news-lor-status-${Stage}'
         - Stage: !Ref Stage
-      CodeUri: ../
-      Handler: bootstrap
       Role: !GetAtt RitoNewsLambdaRole.Arn
       Events:
         Schedule:
@@ -279,23 +212,15 @@ Resources:
             Schedule: !Sub
               - 'rate(${TTL} minutes)'
               - TTL: !Ref TTL
-      Tags:
-        Product: rito-news
-        Stage: !Ref Stage
 
   LegendsOfRuneterraNewsChecker:
     Type: AWS::Serverless::Function
     Metadata:
       BuildMethod: makefile
     Properties:
-      Runtime: provided.al2023
-      Architectures:
-        - arm64
       FunctionName: !Sub
         - 'rito-news-lor-news-${Stage}'
         - Stage: !Ref Stage
-      CodeUri: ../
-      Handler: bootstrap
       Role: !GetAtt RitoNewsLambdaRole.Arn
       Events:
         Schedule:
@@ -304,9 +229,6 @@ Resources:
             Schedule: !Sub
               - 'rate(${TTL} minutes)'
               - TTL: !Ref TTL
-      Tags:
-        Product: rito-news
-        Stage: !Ref Stage
   #endregion Legends of Runeterra
 
   #region Teamfight Tactics
@@ -315,14 +237,9 @@ Resources:
     Metadata:
       BuildMethod: makefile
     Properties:
-      Runtime: provided.al2023
-      Architectures:
-        - arm64
       FunctionName: !Sub
         - 'rito-news-tft-news-${Stage}'
         - Stage: !Ref Stage
-      CodeUri: ../
-      Handler: bootstrap
       Role: !GetAtt RitoNewsLambdaRole.Arn
       Events:
         Schedule:
@@ -331,9 +248,6 @@ Resources:
             Schedule: !Sub
               - 'rate(${TTL} minutes)'
               - TTL: !Ref TTL
-      Tags:
-        Product: rito-news
-        Stage: !Ref Stage
   #endregion Teamfight Tactics
 
   #region Wild Rift
@@ -342,14 +256,9 @@ Resources:
     Metadata:
       BuildMethod: makefile
     Properties:
-      Runtime: provided.al2023
-      Architectures:
-        - arm64
       FunctionName: !Sub
         - 'rito-news-wr-status-${Stage}'
         - Stage: !Ref Stage
-      CodeUri: ../
-      Handler: bootstrap
       Role: !GetAtt RitoNewsLambdaRole.Arn
       Events:
         Schedule:
@@ -358,23 +267,15 @@ Resources:
             Schedule: !Sub
               - 'rate(${TTL} minutes)'
               - TTL: !Ref TTL
-      Tags:
-        Product: rito-news
-        Stage: !Ref Stage
 
   WildRiftNewsChecker:
     Type: AWS::Serverless::Function
     Metadata:
       BuildMethod: makefile
     Properties:
-      Runtime: provided.al2023
-      Architectures:
-        - arm64
       FunctionName: !Sub
         - 'rito-news-wr-news-${Stage}'
         - Stage: !Ref Stage
-      CodeUri: ../
-      Handler: bootstrap
       Role: !GetAtt RitoNewsLambdaRole.Arn
       Events:
         Schedule:
@@ -383,9 +284,6 @@ Resources:
             Schedule: !Sub
               - 'rate(${TTL} minutes)'
               - TTL: !Ref TTL
-      Tags:
-        Product: rito-news
-        Stage: !Ref Stage
   #endregion Wild Rift
 
   #region Riot Games
@@ -394,14 +292,9 @@ Resources:
     Metadata:
       BuildMethod: makefile
     Properties:
-      Runtime: provided.al2023
-      Architectures:
-        - arm64
       FunctionName: !Sub
         - 'rito-news-riotgames-news-${Stage}'
         - Stage: !Ref Stage
-      CodeUri: ../
-      Handler: bootstrap
       Role: !GetAtt RitoNewsLambdaRole.Arn
       Events:
         Schedule:
@@ -410,23 +303,15 @@ Resources:
             Schedule: !Sub
               - 'rate(${TTL} minutes)'
               - TTL: !Ref TTL
-      Tags:
-        Product: rito-news
-        Stage: !Ref Stage
 
   RiotGamesJobsChecker:
     Type: AWS::Serverless::Function
     Metadata:
       BuildMethod: makefile
     Properties:
-      Runtime: provided.al2023
-      Architectures:
-        - arm64
       FunctionName: !Sub
         - 'rito-news-riotgames-jobs-${Stage}'
         - Stage: !Ref Stage
-      CodeUri: ../
-      Handler: bootstrap
       Role: !GetAtt RitoNewsLambdaRole.Arn
       Events:
         Schedule:
@@ -435,7 +320,4 @@ Resources:
             Schedule: !Sub
               - 'rate(${TTL} minutes)'
               - TTL: !Ref TTL
-      Tags:
-        Product: rito-news
-        Stage: !Ref Stage
   #endregion Riot Games
