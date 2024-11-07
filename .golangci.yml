@@ -9,13 +9,30 @@ outputs:
   format: colored-line-number
 
 linters:
-  enable:
-    - revive
-    - gosec
-    - lll
-    - wsl
+  presets:
+    - bugs
+    - comment
+    - complexity
+    - error
+    - format
+    - import
+    - metalinter
+    - module
+    - performance
+    - style
+    - test
+    - unused
+  disable:
+   - depguard # tbd
+   - exhaustruct # tbd
+   - wrapcheck # tbd
+   - tagliatelle # json case differs from output to output
+   - gochecknoinits # we need init for lambda
+   - gochecknoglobals # we need globals for lambda
 
 linters-settings:
   gosec:
     excludes:
       - G107
+  funlen:
+    lines: 80

@@ -7,16 +7,15 @@ import (
 
 	"github.com/Antosik/rito-news-feeds/internal"
 	"github.com/Antosik/rito-news/val"
-
 	"github.com/aws/aws-lambda-go/lambda"
 )
 
 var (
 	params    []statusParameters
-	paramsErr error
+	errParams error
 
 	locales    map[string]statusLocale
-	localesErr error
+	errLocales error
 
 	domain string
 
@@ -29,8 +28,8 @@ const (
 )
 
 func init() {
-	params, paramsErr = getStatusParameters()
-	locales, localesErr = getStatusLocales()
+	params, errParams = getStatusParameters()
+	locales, errLocales = getStatusLocales()
 	domain = os.Getenv("DOMAIN_NAME")
 
 	statusProcessor = VALStatusProcessor{}
@@ -44,15 +43,15 @@ func init() {
 	}
 }
 
-// VAL Status Processor (implements AbstractProcessor)
+// VAL Status Processor (implements AbstractProcessor).
 type VALStatusProcessor struct{}
 
 func (p *VALStatusProcessor) GenerateFilePath(param statusParameters, locale string) string {
-	return internal.FormatFilePath(filepath.Join("val", locale, fmt.Sprintf("status.%s", param.ID)))
+	return internal.FormatFilePath(filepath.Join("val", locale, "status."+param.ID))
 }
 
 func (p *VALStatusProcessor) GenerateAbstractFilePath(param statusParameters) string {
-	return filepath.Join("/", "val", "*", fmt.Sprintf("status.%s.*", param.ID))
+	return filepath.Join("/", "val", "*", "status."+param.ID+".*")
 }
 
 func (p *VALStatusProcessor) ProcessParameters(
@@ -71,11 +70,12 @@ func (p *VALStatusProcessor) ProcessParameters(
 		entries, err := client.GetItems(locale.Locale)
 		if err != nil {
 			errorsCollector.Collect(fmt.Errorf("can't get items for %s-%s: %w", param.ID, locale.Locale, err))
+
 			continue
 		}
 
 		// Check diff with existing data
-		rawpath := fmt.Sprintf("%s.json", fpath)
+		rawpath := fpath + ".json"
 
 		existingFile, err := mainProcessor.S3Client.DownloadFile(rawpath)
 		if err != nil {
@@ -89,12 +89,14 @@ func (p *VALStatusProcessor) ProcessParameters(
 
 		diff, isEqual := internal.CompareAndGetDiff(existingEntries, entries, getValStatusEntryKey)
 		if isEqual {
+			//nolint:forbidigo // need for lambda logs
 			fmt.Printf("%s-%s doesn't require update\n", param.ID, locale.Locale)
+
 			return nil, nil
 		}
 
-		fmt.Printf("Found diff: %s...\n", diff)
-		fmt.Printf("Updating %s-%s...\n", param.ID, locale.Locale)
+		fmt.Printf("Found diff: %s...\n", diff)                    //nolint:forbidigo // need for lambda logs
+		fmt.Printf("Updating %s-%s...\n", param.ID, locale.Locale) //nolint:forbidigo // need for lambda logs
 
 		// Create Feed
 		feed := createValStatusFeed(param.ID, locale, entries)
@@ -121,11 +123,11 @@ func (p *VALStatusProcessor) ProcessParameters(
 
 func handler() error {
 	if len(params) == 0 {
-		return fmt.Errorf("no params found: %w", paramsErr)
+		return fmt.Errorf("no params found: %w", errParams)
 	}
 
 	if len(locales) == 0 {
-		return fmt.Errorf("no locales found: %w", localesErr)
+		return fmt.Errorf("no locales found: %w", errLocales)
 	}
 
 	if domain == "" {

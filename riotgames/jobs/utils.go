@@ -43,7 +43,7 @@ func createRiotGamesJobsFeed(parameters jobsParameters, entries []riotgames.Jobs
 	}
 
 	links := internal.FeedLinks{
-		Alternate: fmt.Sprintf("https://riotgames.com/%s", strings.ToLower(parameters.Locale)),
+		Alternate: "https://riotgames.com/" + strings.ToLower(parameters.Locale),
 	}
 
 	return internal.Feed{

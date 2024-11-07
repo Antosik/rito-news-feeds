@@ -2,6 +2,7 @@ package internal
 
 import (
 	"encoding/xml"
+	"fmt"
 	"strings"
 	"time"
 )
@@ -19,7 +20,12 @@ type RSS struct {
 }
 
 func (rss RSS) XML() ([]byte, error) {
-	return xml.Marshal(rss)
+	data, err := xml.Marshal(rss)
+	if err != nil {
+		return nil, fmt.Errorf("can't marshal rss feed: %w", err)
+	}
+
+	return data, nil
 }
 
 type RSSChannel struct {
@@ -53,9 +59,7 @@ type RSSEntry struct {
 }
 
 func ConvertFeedEntryToRSSEntry(entry *FeedEntry) RSSEntry {
-	var (
-		image *RSSEnclosure
-	)
+	var image *RSSEnclosure
 
 	if entry.Image != "" {
 		image = &RSSEnclosure{URL: entry.Image, Length: 0, Type: "image/*"}

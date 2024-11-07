@@ -13,9 +13,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/s3"
 )
 
-var (
-	bucketName string
-)
+var bucketName string
 
 func init() {
 	bucketName = os.Getenv("BUCKET_NAME")

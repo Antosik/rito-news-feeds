@@ -8,13 +8,12 @@ import (
 
 	"github.com/Antosik/rito-news-feeds/internal"
 	"github.com/Antosik/rito-news/lor"
-
 	"github.com/aws/aws-lambda-go/lambda"
 )
 
 var (
 	params    []newsParameters
-	paramsErr error
+	errParams error
 
 	domain string
 
@@ -28,7 +27,7 @@ const (
 )
 
 func init() {
-	params, paramsErr = getNewsParameters()
+	params, errParams = getNewsParameters()
 	domain = os.Getenv("DOMAIN_NAME")
 
 	newsProcessor = LoRNewsProcessor{}
@@ -42,7 +41,7 @@ func init() {
 	}
 }
 
-// LoR News Processor (implements AbstractProcessor)
+// LoR News Processor (implements AbstractProcessor).
 type LoRNewsProcessor struct{}
 
 func (p *LoRNewsProcessor) GenerateFilePath(param newsParameters) string {
@@ -50,7 +49,7 @@ func (p *LoRNewsProcessor) GenerateFilePath(param newsParameters) string {
 }
 
 func (p *LoRNewsProcessor) GenerateAbstractFilePath(param newsParameters) string {
-	return fmt.Sprintf("/%s.*", p.GenerateFilePath(param))
+	return internal.FormatAbstractFilePath(p.GenerateFilePath(param))
 }
 
 func (p *LoRNewsProcessor) ProcessParameters(
@@ -66,11 +65,12 @@ func (p *LoRNewsProcessor) ProcessParameters(
 	entries, err := client.GetItems(articlesCount)
 	if err != nil {
 		errorsCollector.Collect(fmt.Errorf("can't get items for %s: %w", param.Locale, err))
+
 		return nil, *errorsCollector
 	}
 
 	// Check diff with existing data
-	rawpath := fmt.Sprintf("%s.json", fpath)
+	rawpath := fpath + ".json"
 
 	existingFile, err := mainProcessor.S3Client.DownloadFile(rawpath)
 	if err != nil {
@@ -84,12 +84,14 @@ func (p *LoRNewsProcessor) ProcessParameters(
 
 	diff, isEqual := internal.CompareAndGetDiff(existingEntries, entries, getLorNewsEntryKey)
 	if isEqual {
+		//nolint:forbidigo // need for lambda logs
 		fmt.Printf("%s doesn't require update\n", param.Locale)
+
 		return nil, nil
 	}
 
-	fmt.Printf("Found diff: %s...\n", diff)
-	fmt.Printf("Updating %s...\n", param.Locale)
+	fmt.Printf("Found diff: %s...\n", diff)      //nolint:forbidigo // need for lambda logs
+	fmt.Printf("Updating %s...\n", param.Locale) //nolint:forbidigo // need for lambda logs
 
 	// Create Feed
 	feed := createLorNewsFeed(param, entries)
@@ -113,7 +115,7 @@ func (p *LoRNewsProcessor) ProcessParameters(
 
 func handler() error {
 	if len(params) == 0 {
-		return fmt.Errorf("no params found: %w", paramsErr)
+		return fmt.Errorf("no params found: %w", errParams)
 	}
 
 	if domain == "" {

@@ -38,9 +38,7 @@ type JSONFeedEntry struct {
 }
 
 func ConvertFeedEntryToJSONFeedEntry(entry *FeedEntry) JSONFeedEntry {
-	var (
-		authors = make([]JSONFeedAuthor, len(entry.Authors))
-	)
+	authors := make([]JSONFeedAuthor, len(entry.Authors))
 
 	for i, author := range entry.Authors {
 		authors[i] = JSONFeedAuthor{Name: author}

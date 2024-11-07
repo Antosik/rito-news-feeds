@@ -8,13 +8,12 @@ import (
 
 	"github.com/Antosik/rito-news-feeds/internal"
 	"github.com/Antosik/rito-news/val"
-
 	"github.com/aws/aws-lambda-go/lambda"
 )
 
 var (
 	params    []esportsParameters
-	paramsErr error
+	errParams error
 
 	domain string
 
@@ -28,7 +27,7 @@ const (
 )
 
 func init() {
-	params, paramsErr = getEsportsParameters()
+	params, errParams = getEsportsParameters()
 	domain = os.Getenv("DOMAIN_NAME")
 
 	esportsProcessor = VALEsportsProcessor{}
@@ -42,7 +41,7 @@ func init() {
 	}
 }
 
-// VAL Esports Processor (implements AbstractProcessor)
+// VAL Esports Processor (implements AbstractProcessor).
 type VALEsportsProcessor struct{}
 
 func (p *VALEsportsProcessor) GenerateFilePath(param esportsParameters) string {
@@ -50,7 +49,7 @@ func (p *VALEsportsProcessor) GenerateFilePath(param esportsParameters) string {
 }
 
 func (p *VALEsportsProcessor) GenerateAbstractFilePath(param esportsParameters) string {
-	return fmt.Sprintf("/%s.*", p.GenerateFilePath(param))
+	return internal.FormatAbstractFilePath(p.GenerateFilePath(param))
 }
 
 func (p *VALEsportsProcessor) ProcessParameters(
@@ -66,11 +65,12 @@ func (p *VALEsportsProcessor) ProcessParameters(
 	entries, err := client.GetItems(articlesCount)
 	if err != nil {
 		errorsCollector.Collect(fmt.Errorf("can't get items for %s: %w", param.Locale, err))
+
 		return nil, *errorsCollector
 	}
 
 	// Check diff with existing data
-	rawpath := fmt.Sprintf("%s.json", fpath)
+	rawpath := fpath + ".json"
 
 	existingFile, err := mainProcessor.S3Client.DownloadFile(rawpath)
 	if err != nil {
@@ -84,12 +84,14 @@ func (p *VALEsportsProcessor) ProcessParameters(
 
 	diff, isEqual := internal.CompareAndGetDiff(existingEntries, entries, getValEsportsEntryKey)
 	if isEqual {
+		//nolint:forbidigo // need for lambda logs
 		fmt.Printf("%s doesn't require update\n", param.Locale)
+
 		return nil, nil
 	}
 
-	fmt.Printf("Found diff: %s...\n", diff)
-	fmt.Printf("Updating %s...\n", param.Locale)
+	fmt.Printf("Found diff: %s...\n", diff)      //nolint:forbidigo // need for lambda logs
+	fmt.Printf("Updating %s...\n", param.Locale) //nolint:forbidigo // need for lambda logs
 
 	// Create Feed
 	feed := createValEsportsFeed(param, entries)
@@ -113,7 +115,7 @@ func (p *VALEsportsProcessor) ProcessParameters(
 
 func handler() error {
 	if len(params) == 0 {
-		return fmt.Errorf("no params found: %w", paramsErr)
+		return fmt.Errorf("no params found: %w", errParams)
 	}
 
 	if domain == "" {
