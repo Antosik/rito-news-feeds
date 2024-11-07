@@ -5,7 +5,7 @@ go 1.23
 toolchain go1.23.2
 
 require (
-	github.com/Antosik/rito-news v0.0.0-20241107105824-fd3d82da3dcc
+	github.com/Antosik/rito-news v0.0.0-20241107134709-fcecf71538fb
 	github.com/aws/aws-lambda-go v1.47.0
 	github.com/aws/aws-sdk-go-v2 v1.32.4
 	github.com/aws/aws-sdk-go-v2/config v1.28.2
