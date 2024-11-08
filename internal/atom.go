@@ -2,11 +2,15 @@ package internal
 
 import (
 	"encoding/xml"
+	"fmt"
 	"strings"
 	"time"
 )
 
-const NSAtom = "http://www.w3.org/2005/Atom"
+const (
+	NSAtom         = "http://www.w3.org/2005/Atom"
+	AtomLinksCount = 2
+)
 
 // Atom Docs - https://validator.w3.org/feed/docs/atom.html
 
@@ -25,7 +29,12 @@ type Atom struct {
 }
 
 func (atom Atom) XML() ([]byte, error) {
-	return xml.Marshal(atom)
+	data, err := xml.Marshal(atom)
+	if err != nil {
+		return nil, fmt.Errorf("can't marshal atom feed: %w", err)
+	}
+
+	return data, nil
 }
 
 type AtomGenerator struct {
@@ -68,7 +77,7 @@ type AtomLink struct {
 
 func ConvertFeedEntryToAtomEntry(entry *FeedEntry) AtomEntry {
 	var (
-		links      = make([]AtomLink, 0, 2)
+		links      = make([]AtomLink, 0, AtomLinksCount)
 		authors    = make([]AtomAuthor, len(entry.Authors))
 		categories = make([]AtomCategory, len(entry.Categories))
 	)
@@ -104,7 +113,7 @@ func ConvertFeedToAtom(feed *Feed) Atom {
 		entries[i] = item.Atom()
 	}
 
-	links := make([]AtomLink, 0, 2)
+	links := make([]AtomLink, 0, AtomLinksCount)
 
 	links = append(links, AtomLink{
 		Href: feed.Links.Alternate,

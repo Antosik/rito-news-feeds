@@ -87,8 +87,8 @@ build-LeagueOfLegendsNewsChecker:
 	mv ./lolnews $(ARTIFACTS_DIR)/bootstrap
 
 build-LeagueOfLegendsEsportsChecker:
-	GOARCH=amd64 GOOS=linux go build -trimpath -o ./lolesports lol/esports/main.go lol/esports/utils.go
-	mv ./lolesports $(ARTIFACTS_DIR)/lolesports
+	GOARCH=arm64 GOOS=linux go build -trimpath -o ./lolesports lol/esports/main.go lol/esports/utils.go
+	mv ./lolesports $(ARTIFACTS_DIR)/bootstrap
 #endregion Build: League of Legends
 
 #region Build: VALORANT
@@ -101,8 +101,8 @@ build-VALORANTNewsChecker:
 	mv ./valnews $(ARTIFACTS_DIR)/bootstrap
 
 build-VALORANTEsportsChecker:
-	GOARCH=amd64 GOOS=linux go build -trimpath -o ./valesports val/esports/main.go val/esports/utils.go
-	mv ./valesports $(ARTIFACTS_DIR)/valesports
+	GOARCH=arm64 GOOS=linux go build -trimpath -o ./valesports val/esports/main.go val/esports/utils.go
+	mv ./valesports $(ARTIFACTS_DIR)/bootstrap
 #endregion Build: VALORANT
 
 #region Build: Legends of Runeterra
@@ -129,10 +129,6 @@ build-WildRiftStatusChecker:
 build-WildRiftNewsChecker:
 	GOARCH=arm64 GOOS=linux go build -trimpath -o ./wrnews wr/news/main.go wr/news/utils.go
 	mv ./wrnews $(ARTIFACTS_DIR)/bootstrap
-
-build-WildRiftEsportsChecker:
-	GOARCH=amd64 GOOS=linux go build -trimpath -o ./wresports wr/esports/main.go wr/esports/utils.go
-	mv ./wresports $(ARTIFACTS_DIR)/wresports
 #endregion Build: WildRift
 
 #endregion Build: RiotGames

@@ -45,7 +45,7 @@ func createRiotGamesNewsFeed(parameters newsParameters, entries []riotgames.News
 	}
 
 	links := internal.FeedLinks{
-		Alternate: fmt.Sprintf("https://www.riotgames.com/%s", strings.ToLower(parameters.Locale)),
+		Alternate: "https://www.riotgames.com/" + strings.ToLower(parameters.Locale),
 	}
 
 	return internal.Feed{

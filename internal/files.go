@@ -11,6 +11,8 @@ type FeedFile struct {
 	Buffer   []byte
 }
 
+const filesCount = 3 // atom, rss, jsonfeed, json (will be added lately)
+
 var feedMimeType = map[string]string{
 	"atom":     "application/atom+xml",
 	"rss":      "application/rss+xml",
@@ -25,14 +27,14 @@ var feedBufferGenerators = map[string]func(feed Feed) ([]byte, error){
 
 func GenerateFeedFiles(feed Feed, domain string, name string) ([]FeedFile, []error) {
 	var (
-		generatedFiles   = make([]FeedFile, 0, 4)
-		generationErrors = make([]error, 0, 4)
+		generatedFiles   = make([]FeedFile, 0, filesCount)
+		generationErrors = make([]error, 0, filesCount)
 		formats          = []string{"atom", "rss", "jsonfeed"}
 	)
 
 	for _, format := range formats {
 		mime := feedMimeType[format]
-		filename := fmt.Sprintf("%s.%s", name, format)
+		filename := name + "." + format // "%s.%s"
 
 		if domain != "" {
 			feed.Links.Self = fmt.Sprintf("https://%s/%s", domain, filename)
@@ -68,4 +70,8 @@ func GenerateRawFile(entries interface{}, name string) (FeedFile, error) {
 
 func FormatFilePath(path string) string {
 	return strings.ReplaceAll(strings.ToLower(path), "_", "-")
+}
+
+func FormatAbstractFilePath(path string) string {
+	return "/" + path + ".*" // "/%s.*"
 }

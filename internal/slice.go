@@ -1,9 +1,5 @@
 package internal
 
-import (
-	"fmt"
-)
-
 func SplitSliceToChunks[T interface{}](arr []T, count int) [][]T {
 	var (
 		size   = int(float64(len(arr)) / float64(count))
@@ -12,32 +8,32 @@ func SplitSliceToChunks[T interface{}](arr []T, count int) [][]T {
 	)
 
 	pointer := 0
-	for i := 0; i < count; i++ {
+	for index := range count {
 		start := pointer
-		pointer = pointer + size
+		pointer += size
 
-		if i < exceed {
-			pointer = pointer + 1
+		if index < exceed {
+			pointer++
 		}
 
 		if pointer > len(arr) {
 			pointer = len(arr)
 		}
 
-		result[i] = make([]T, pointer-start)
-		copy(result[i], arr[start:pointer])
+		result[index] = make([]T, pointer-start)
+		copy(result[index], arr[start:pointer])
 	}
 
 	return result
 }
 
-func IsEqual[T interface{}](a, b []T, comparator func(a, b T) bool) bool {
-	if len(a) != len(b) {
+func IsEqual[T interface{}](first, second []T, comparator func(a, b T) bool) bool {
+	if len(first) != len(second) {
 		return false
 	}
 
-	for i := range a {
-		if !comparator(a[i], b[i]) {
+	for i := range first {
+		if !comparator(first[i], second[i]) {
 			return false
 		}
 	}
@@ -46,32 +42,33 @@ func IsEqual[T interface{}](a, b []T, comparator func(a, b T) bool) bool {
 }
 
 func CompareAndGetDiff[T interface{}](
-	old, new []T,
+	olditems, newitems []T,
 	keyfunc func(item T) string,
-) (diff []string, isEqual bool) {
-	om := make(map[string]int8, len(old))
+) ([]string, bool) {
+	changesmap := make(map[string]int8, len(olditems))
+	diff := []string{}
 
-	for _, olditem := range old {
-		om[keyfunc(olditem)] = om[keyfunc(olditem)] + 1
+	for _, olditem := range olditems {
+		changesmap[keyfunc(olditem)] = changesmap[keyfunc(olditem)] + 1
 	}
 
-	for _, newitem := range new {
+	for _, newitem := range newitems {
 		key := keyfunc(newitem)
 
-		val, found := om[key]
+		val, found := changesmap[key]
 		if found {
-			om[key] = val - 1
+			changesmap[key] = val - 1
 		} else {
-			diff = append(diff, fmt.Sprintf("+ %s", key))
+			diff = append(diff, "+ "+key)
 		}
 	}
 
-	for key, value := range om {
+	for key, value := range changesmap {
 		switch {
 		case value < 0:
-			diff = append(diff, fmt.Sprintf("+ %s", key))
+			diff = append(diff, "+ "+key)
 		case value > 0:
-			diff = append(diff, fmt.Sprintf("- %s", key))
+			diff = append(diff, "- "+key)
 		}
 	}
 

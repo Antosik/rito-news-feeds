@@ -18,11 +18,10 @@ To get links to Atom/JSONFeed/RSS files and raw data files (.json) follow this g
 -   VALORANT
     -   [News](valorant/news.md)
     -   [Esports](valorant/esports.md)
-    -   [Server status](league-of-legends/server-status.md)
+    -   [Server status](valorant/server-status.md)
 -   Wild Rift
     -   [News](wild-rift/news.md)
-    -   [Esports](league-of-legends/esports.md)
-    -   [Server status](league-of-legends/server-status.md)
+    -   [Server status](wild-rift/server-status.md)
 
 ## Use links
 - Use your favourite Atom/RSS/JSONFeed reader, e.g. [Feedly](https://feedly.com), [NewsBlur](https://www.newsblur.com/), [Inoreader](https://www.inoreader.com/);

@@ -70,6 +70,7 @@ func (p *MainProcessor[ParamType]) Process(params []ParamType) error {
 		generatedPathsCollector = []string{}
 	)
 
+	//nolint:forbidigo // need for lambda logs
 	fmt.Printf(
 		"Starting processing %s with %d parameters and %d concurrency\n",
 		p.Name,
@@ -81,18 +82,21 @@ func (p *MainProcessor[ParamType]) Process(params []ParamType) error {
 		go p.ProcessChunk(generatedPathsChannel, errorsChannel, chunk, p.S3Client)
 	}
 
-	for i := 0; i < p.Concurrency; i++ {
+	for range p.Concurrency {
 		errorsCollector.CollectFrom(<-errorsChannel)
 
 		generatedPathsCollector = append(generatedPathsCollector, <-generatedPathsChannel...)
 	}
 
 	if len(generatedPathsCollector) > 0 {
+		//nolint:forbidigo // need for lambda logs
 		fmt.Printf("Updated paths (%d): %v\n", len(generatedPathsCollector), generatedPathsCollector)
 	}
 
 	if errorsCollector.Size() > 0 {
-		fmt.Printf("During execution %d errors occured\n", errorsCollector.Size())
+		//nolint:forbidigo // need for lambda logs
+		fmt.Printf("During execution %d errors occurred\n", errorsCollector.Size())
+
 		return errorsCollector.Error()
 	}
 
